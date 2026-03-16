@@ -1,0 +1,143 @@
+/* Main Stylesheet */
+
+:root {
+    --primary: #1E3A8A;
+    --secondary: #F97316;
+    --background: #F3F4F6;
+    --danger: #DC2626;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background);
+    color: #333;
+}
+
+.navbar {
+    background-color: var(--primary) !important;
+}
+
+.btn-primary {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary) !important;
+    border-color: var(--secondary) !important;
+}
+
+.bg-dark {
+    background-color: var(--primary) !important;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color: var(--primary);
+    color: white;
+}
+
+table {
+    background-color: white;
+}
+
+.table th {
+    background-color: var(--primary);
+    color: white;
+}
+
+.alert-warning {
+    background-color: #FEF3C7;
+    color: #92400E;
+}
+
+.alert-danger {
+    background-color: #FEE2E2;
+    color: #991B1B;
+}
+
+.badge {
+    padding: 8px 12px;
+}
+
+.status-pending {
+    background-color: #FEF3C7;
+    color: #92400E;
+}
+
+.status-allocated {
+    background-color: #DBEAFE;
+    color: #1E40AF;
+}
+
+.status-delivered {
+    background-color: #D1FAE5;
+    color: #065F46;
+}
+
+.icon-lg {
+    font-size: 30px;
+    color: var(--secondary);
+}
+
+/* Forms */
+.form-control, .form-select {
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 0.2rem rgba(249, 115, 22, 0.25);
+}
+
+/* Buttons */
+.btn {
+    border-radius: 5px;
+    font-weight: 500;
+}
+
+/* Sidebar */
+nav {
+    position: sticky;
+    top: 0;
+}
+
+/* Dashboard Cards */
+.dashboard-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.dashboard-card h3 {
+    color: var(--primary);
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.dashboard-card .number {
+    font-size: 32px;
+    color: var(--secondary);
+    font-weight: bold;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    nav {
+        position: static;
+    }
+}
