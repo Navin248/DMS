@@ -70,7 +70,6 @@ CREATE TABLE IF NOT EXISTS `requests` (
     `approval_date` DATETIME,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
     FOREIGN KEY (`disaster_id`) REFERENCES `disasters`(`id`) ON DELETE SET NULL,
     FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE SET NULL,
     FOREIGN KEY (`approved_by`) REFERENCES `users`(`id`) ON DELETE SET NULL,

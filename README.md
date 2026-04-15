@@ -1,165 +1,188 @@
-# Disaster Relief Management System (DRMS)
+# 🛡️ Disaster Relief Management System (DRMS)
 
-A comprehensive web-based disaster management portal designed to coordinate disaster response, resource allocation, and relief operations.
+A comprehensive web-based system for managing disaster relief operations including disaster tracking, resource management, request handling, and allocation coordination.
+
+![PHP](https://img.shields.io/badge/PHP-8.0%2B-blue?logo=php)
+![MySQL](https://img.shields.io/badge/MySQL%2FMariaDB-10.4%2B-orange?logo=mariadb)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-purple?logo=bootstrap)
+![License](https://img.shields.io/badge/License-MIT-green)
 
 ---
 
 ## 📋 Table of Contents
 
-- [System Overview](#system-overview)
-- [Prerequisites](#prerequisites)
-- [Installation & Setup](#installation--setup)
-- [Database Configuration](#database-configuration)
-- [Project Structure](#project-structure)
-- [Features](#features)
-- [User Credentials](#user-credentials)
-- [Technologies Used](#technologies-used)
-- [Testing](#testing)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Prerequisites](#-prerequisites)
+- [Setup Guide (Step by Step)](#-setup-guide-step-by-step)
+  - [Step 1: Install XAMPP](#step-1-install-xampp)
+  - [Step 2: Clone the Repository](#step-2-clone-the-repository)
+  - [Step 3: Create the Database](#step-3-create-the-database)
+  - [Step 4: Run Migrations](#step-4-run-migrations)
+  - [Step 5: Start the Server](#step-5-start-the-server)
+  - [Step 6: Access the Application](#step-6-access-the-application)
+- [Default Login Credentials](#-default-login-credentials)
+- [Project Structure](#-project-structure)
+- [User Roles](#-user-roles)
+- [Troubleshooting](#-troubleshooting)
 
 ---
 
-## 🎯 System Overview
+## ✨ Features
 
-**Phase 8D: PRODUCTION READY ✅**
-
-The Disaster Relief Management System is fully operational with all core workflows complete:
-- **Phase 1-4**: Infrastructure & Basic Management ✅ **COMPLETE**
-- **Phase 5-7**: Request & Allocation Management ✅ **COMPLETE**
-- **Phase 8**: Dashboard Interactivity ✅ **COMPLETE**
-- **Phase 8D**: Allocation Status Tracking & Real-time Sync ✅ **COMPLETE**
-
-**Status: 🟢 Production Ready**
-All workflows tested and verified. Ready for immediate deployment.
-
----
-
-## 📦 Prerequisites
-
-Before setting up the project, ensure you have:
-
-1. **XAMPP** (v7.4 or higher)
-   - Apache Web Server
-   - MySQL Database
-   - PHP (v7.4+)
-
-2. **Git** (for version control)
-
-3. **Text Editor** (VS Code, Sublime, etc.)
-
-4. **Browser** (Chrome, Firefox, Edge)
+| Module | Description |
+|--------|-------------|
+| **🏠 Public Landing Page** | Disaster awareness, safety tips, live map, emergency contacts |
+| **📊 Admin Dashboard** | Real-time statistics, activity timeline, CSV export |
+| **🌪️ Disaster Management** | Add, edit, view disasters with map coordinates |
+| **📦 Resource Management** | Track inventory across warehouses |
+| **📝 Request Management** | Create, approve, and track resource requests |
+| **🚛 Allocation Management** | Allocate resources to requests with delivery tracking |
+| **👤 User Management** | Admin panel to manage users and roles |
+| **👷 Worker Portal** | Dedicated dashboard for field workers |
+| **🔐 Authentication** | Secure login with bcrypt, session timeout |
+| **🔑 Password Reset** | Token-based forgot password flow |
+| **📱 Responsive Design** | Mobile-friendly Bootstrap 5 UI |
 
 ---
 
-## 🚀 Installation & Setup
+## 🛠️ Tech Stack
 
-### Step 1: Extract Project Files
+| Component | Technology |
+|-----------|-----------|
+| **Backend** | PHP 8.0+ |
+| **Database** | MySQL 5.7+ / MariaDB 10.4+ |
+| **Frontend** | HTML5, CSS3, JavaScript |
+| **CSS Framework** | Bootstrap 5.3 |
+| **Icons** | Font Awesome 6.4 |
+| **Maps** | Leaflet.js + OpenStreetMap |
+| **Slider** | Swiper.js |
+| **Animations** | AOS (Animate On Scroll) |
+| **Server** | Apache (via XAMPP) |
+
+---
+
+## 📌 Prerequisites
+
+Before setting up this project, make sure you have:
+
+1. **XAMPP** (v8.2 or higher recommended) — [Download XAMPP](https://www.apachefriends.org/download.html)
+   - Includes: Apache, MySQL/MariaDB, PHP
+2. **Git** — [Download Git](https://git-scm.com/downloads)
+3. **Web Browser** — Chrome, Firefox, or Edge (latest version)
+
+> **Note:** No additional PHP packages or Composer dependencies are required. The project uses CDN-hosted libraries.
+
+---
+
+## 🚀 Setup Guide (Step by Step)
+
+### Step 1: Install XAMPP
+
+1. Download XAMPP from [https://www.apachefriends.org](https://www.apachefriends.org)
+2. Run the installer and install to `C:\xampp` (default)
+3. During installation, ensure these components are selected:
+   - ✅ Apache
+   - ✅ MySQL
+   - ✅ PHP
+
+---
+
+### Step 2: Clone the Repository
+
+Open a terminal/command prompt and run:
 
 ```bash
-# Navigate to XAMPP htdocs directory
 cd C:\xampp\htdocs
-
-# Clone or extract the project
-git clone <repository-url>
-# OR
-# Extract DMS.zip to C:\xampp\htdocs\DMS
+git clone https://github.com/Navin248/DMS.git
 ```
 
-### Step 2: Start XAMPP Services
-
-1. Open **XAMPP Control Panel**
-2. Click **Start** next to:
-   - Apache
-   - MySQL
-   - (FileZilla and Tomcat optional)
-3. Verify both show "Running" status
-
-### Step 3: Database Configuration
-
-1. **Open phpMyAdmin**
-   ```
-   Navigate to: http://localhost/phpmyadmin
-   ```
-
-2. **Create Database**
-   ```sql
-   CREATE DATABASE dms_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-   ```
-
-3. **Import Schema**
-   - Go to "Import" tab in phpMyAdmin
-   - Select `database_schema.sql` from the project folder
-   - Click "Import"
-   - Verify all tables are created:
-     - `users`
-     - `disasters`
-     - `resources`
-     - `requests`
-     - `allocations`
-
-4. **Verify Connection Test**
-   ```
-   Navigate to: http://localhost/DMS/test_connection.php
-   Expected: "Connection successful!" message
-   ```
-
-### Step 4: Configure Application
-
-1. **Check config/database.php**
-   ```php
-   $servername = "localhost";
-   $username = "root";
-   $password = "";  // Default XAMPP password (empty)
-   $dbname = "dms_db";
-   ```
-
-2. **If password prompt appears:**
-   - Update `config/database.php` with your MySQL credentials
-   - Also update `config/auth.php` if needed
-
-### Step 5: Access Application
-
-1. **Homepage**
-   ```
-   http://localhost/DMS/
-   ```
-
-2. **Login Portal**
-   ```
-   http://localhost/DMS/login.php
-   ```
-
-3. **Admin Dashboard**
-   ```
-   http://localhost/DMS/dashboard.php
-   (After login with admin credentials)
-   ```
+This will create the project at `C:\xampp\htdocs\DMS\`
 
 ---
 
-## 🗄️ Database Configuration
+### Step 3: Create the Database
 
-### Database Name
-```
-dms_db
+1. **Open XAMPP Control Panel** and start:
+   - ✅ **Apache** — Click `Start`
+   - ✅ **MySQL** — Click `Start`
+
+2. **Open phpMyAdmin** in your browser:
+   ```
+   http://localhost/phpmyadmin
+   ```
+
+3. **Run the main database schema:**
+   - Click the **SQL** tab at the top
+   - Open the file `database_schema.sql` from the project folder
+   - Copy the **entire contents** and paste into the SQL query box
+   - Click **Go** to execute
+
+   **Or use the command line:**
+   ```bash
+   C:\xampp\mysql\bin\mysql.exe -u root < C:\xampp\htdocs\DMS\database_schema.sql
+   ```
+
+   This will:
+   - ✅ Create the `disaster_relief_system` database
+   - ✅ Create all 5 tables (`users`, `disasters`, `resources`, `requests`, `allocations`)
+   - ✅ Insert sample data (users, disasters, resources)
+
+---
+
+### Step 4: Run Migrations
+
+After the main schema, run these migrations **in order**:
+
+#### Migration 1: Password Resets Table
+```bash
+C:\xampp\mysql\bin\mysql.exe -u root disaster_relief_system < C:\xampp\htdocs\DMS\migrations\add_password_resets.sql
 ```
 
-### Database Credentials (Default)
-```
-Host: localhost
-User: root
-Password: (empty)
-Port: 3306
-```
+**Or in phpMyAdmin:**
+- Select the `disaster_relief_system` database from the left sidebar
+- Click the **SQL** tab
+- Paste the contents of `migrations/add_password_resets.sql`
+- Click **Go**
 
-### Database Tables
+This will:
+- ✅ Create the `password_resets` table
+- ✅ Migrate default user passwords from MD5 to bcrypt
 
-| Table | Purpose | Key Fields |
-|-------|---------|-----------|
-| **users** | User authentication & roles | id, username, password, role |
-| **disasters** | Disaster incidents | id, type, location, severity, status, date |
-| **resources** | Inventory management | id, resource_name, quantity, warehouse_location |
-| **requests** | Relief requests | id, disaster_id, resource_type, quantity, priority, status |
-| **allocations** | Resource allocations | id, request_id, resource_id, quantity_allocated, delivery_status |
+---
+
+### Step 5: Start the Server
+
+1. Open **XAMPP Control Panel**
+2. Ensure both services show green:
+   - ✅ **Apache** — Running
+   - ✅ **MySQL** — Running
+
+> If Apache won't start, port 80 may be in use. Check the [Troubleshooting](#-troubleshooting) section.
+
+---
+
+### Step 6: Access the Application
+
+Open your browser and go to:
+
+| Page | URL |
+|------|-----|
+| **Home (Public)** | [http://localhost/DMS/](http://localhost/DMS/) |
+| **Login** | [http://localhost/DMS/login.php](http://localhost/DMS/login.php) |
+| **Admin Dashboard** | [http://localhost/DMS/dashboard.php](http://localhost/DMS/dashboard.php) |
+| **phpMyAdmin** | [http://localhost/phpmyadmin](http://localhost/phpmyadmin) |
+
+---
+
+## 🔐 Default Login Credentials
+
+| Role | Username | Password |
+|------|----------|----------|
+| **Admin** | `admin` | `admin123` |
+| **Coordinator/Worker** | `coordinator1` | `coord123` |
+
+> ⚠️ **Important:** Change these passwords after first login via the **Profile** page or **Admin > Manage Users**.
 
 ---
 
@@ -167,234 +190,167 @@ Port: 3306
 
 ```
 DMS/
-├── config/
+├── admin/                    # Admin panel pages
+│   ├── dashboard.php         # Admin-specific dashboard
+│   └── manage_users.php      # User management (CRUD)
+│
+├── allocations/              # Resource allocation module
+│   ├── allocate_resource.php  # Create new allocation
+│   ├── edit_allocation.php    # Edit existing allocation
+│   └── view_allocations.php   # List all allocations
+│
+├── assets/                   # Static assets
+│   ├── css/style.css         # Custom styles
+│   ├── images/               # Image assets
+│   └── js/                   # JavaScript files
+│
+├── config/                   # Configuration files
 │   ├── database.php          # Database connection
-│   ├── auth.php              # Authentication functions
-│   └── constants.php         # Application constants
-├── includes/
-│   ├── sidebar.php           # Navigation sidebar
+│   └── auth.php              # Authentication middleware
+│
+├── disasters/                # Disaster management module
+│   ├── add_disaster.php      # Add new disaster
+│   ├── edit_disaster.php     # Edit disaster details
+│   └── view_disasters.php    # List all disasters
+│
+├── includes/                 # Shared components
 │   ├── header.php            # Page header
+│   ├── sidebar.php           # Navigation sidebar
 │   └── footer.php            # Page footer
-├── assets/
-│   └── css/
-│       └── style.css         # Global styles
-├── disasters/
-│   ├── view_disasters.php    # List disasters
-│   ├── add_disaster.php      # Create disaster
-│   ├── update_disaster.php   # Edit disaster
-│   └── delete_disaster.php   # Delete disaster
-├── resources/
-│   ├── view_resources.php    # Inventory list
-│   ├── add_resource.php      # Add resource
-│   ├── update_resource.php   # Edit resource
-│   └── delete_resource.php   # Delete resource
-├── requests/
-│   ├── view_requests.php     # List requests
-│   └── create_request.php    # Create request
-├── allocations/
-│   ├── view_allocations.php  # List allocations
-│   └── allocate_resource.php # Create allocation
-├── index.php                 # Public homepage
-├── dashboard.php             # Admin dashboard
+│
+├── migrations/               # Database migration scripts
+│   ├── Phase_8A_migration.sql     # Request approval columns
+│   └── add_password_resets.sql    # Password reset table + bcrypt migration
+│
+├── requests/                 # Request management module
+│   ├── create_request.php    # Create resource request
+│   ├── edit_request.php      # Edit request
+│   └── view_requests.php     # List all requests
+│
+├── resources/                # Resource management module
+│   ├── add_resource.php      # Add new resource
+│   └── view_resources.php    # List all resources
+│
+├── worker/                   # Worker portal
+│   ├── dashboard.php         # Worker dashboard
+│   ├── my_requests.php       # Worker's own requests
+│   └── view_request_detail.php # Request detail view
+│
+├── index.php                 # Public landing page
 ├── login.php                 # Login page
 ├── logout.php                # Logout handler
-├── profile.php               # User profile
-├── database_schema.sql       # Database schema
-├── test_connection.php       # Connection test
-└── README.md                 # Setup guide
+├── profile.php               # User profile management
+├── dashboard.php             # Main admin dashboard
+├── forgot_password.php       # Forgot password form
+├── reset_password.php        # Password reset redirect
+├── reset_password_token.php  # Token-based password reset
+├── migrate_passwords.php     # MD5 to bcrypt migration utility
+├── database_schema.sql       # Main database schema
+└── README.md                 # This file
 ```
 
 ---
 
-## ✨ Features
+## 👥 User Roles
 
-### Phase 1-4 (Completed)
-
-#### Authentication
-- User login with session management
-- Role-based access control (Admin/User)
-- 30-minute session timeout
-- Profile management
-
-#### Disaster Management
-- Create, read, update, delete disasters
-- Track disaster status (active/resolved)
-- Location tracking with coordinates
-- Severity levels (Low/Medium/High/Critical)
-
-#### Resource Management
-- Inventory tracking
-- Low-stock alerts (threshold: 100 units)
-- Warehouse location management
-- Summary cards with modals
-- Clickable detail cards
-
-#### Dashboard
-- Live statistics (Active Disasters, Pending Requests, Total Resources, Delivered Allocations)
-- Clickable cards with detailed modals
-- Quick action buttons
-- Professional UI with animations
-
-### Phase 5-7 (Pending)
-
-#### Request Management
-- Relief request submission
-- Priority-based queue
-- Status tracking
-
-#### Resource Allocation
-- Allocate resources to requests
-- Track delivery status
-- Report generation
-
-#### Enhanced Dashboard
-- Charts and visualizations
-- Historical data analysis
-- Export capabilities
+| Role | Access |
+|------|--------|
+| **Admin** | Full access — manage disasters, resources, requests, allocations, users |
+| **User/Coordinator** | Create requests, view disasters & resources, manage own profile |
+| **Worker** | Worker portal, view assigned requests, update delivery status |
 
 ---
 
-## 👤 User Credentials
+## 🔧 Database Configuration
 
-### Default Admin Account
-```
-Username: admin
-Password: admin1
-Role: Admin (Full Access)
+The database connection is configured in `config/database.php`:
+
+```php
+define('DB_HOST', 'localhost');
+define('DB_USER', 'root');
+define('DB_PASS', '');           // Default XAMPP has no password
+define('DB_NAME', 'disaster_relief_system');
 ```
 
-### Default User Account
-```
-Username: user1
-Password: admin
-Role: User (Limited Access)
-```
-
-**⚠️ Security Note:** Change these passwords on first login!
+If your MySQL has a password, update `DB_PASS` accordingly.
 
 ---
 
-## 🛠️ Technologies Used
+## 🗄️ Database Tables
 
-### Frontend
-- **HTML5** - Markup
-- **CSS3** - Styling
-- **Bootstrap 5.3.0** - UI Framework
-- **JavaScript** - Interactivity
-- **Font Awesome 6.4.0** - Icons
-- **Swiper.js** - Carousel/Slider
-- **Leaflet.js** - Interactive Maps
-- **AOS.js** - Scroll Animations
+| Table | Description |
+|-------|-------------|
+| `users` | User accounts with roles and bcrypt passwords |
+| `disasters` | Disaster events with location, severity, coordinates |
+| `resources` | Available relief resources and inventory |
+| `requests` | Resource requests linked to disasters |
+| `allocations` | Resource allocations to fulfill requests |
+| `password_resets` | Token-based password reset records |
 
-### Backend
-- **PHP 7.4+** - Server-side logic
-- **MySQL** - Database
-- **Prepared Statements** - SQL Injection Prevention
+### Entity Relationship
 
-### Architecture
-- **3-Tier Architecture** (Presentation, Business Logic, Data)
-- **Session-Based Authentication**
-- **RESTful Design Principles**
-- **AJAX for User Interactions**
-
----
-
-## 🧪 Testing
-
-### Connection Test
 ```
-http://localhost/DMS/test_connection.php
-```
-Verifies database connectivity and displays configuration details.
-
-### Manual Testing Checklist
-
-#### Authentication
-- [ ] Login with admin credentials
-- [ ] Verify 30-minute session timeout
-- [ ] Test logout functionality
-- [ ] Check role-based access
-
-#### Disasters Module
-- [ ] Create new disaster
-- [ ] View disaster list
-- [ ] Edit disaster details
-- [ ] Delete disaster
-- [ ] Verify sorting (newest first)
-
-#### Resources Module
-- [ ] Add new resource
-- [ ] View inventory
-- [ ] Update quantity
-- [ ] Delete resource
-- [ ] Verify low-stock alerts
-- [ ] Click summary cards for modals
-
-#### Dashboard
-- [ ] Verify statistics load correctly
-- [ ] Click each dashboard card
-- [ ] Check modal data accuracy
-- [ ] Test quick action buttons
-
-#### Navigation
-- [ ] Test sidebar links
-- [ ] Verify absolute paths work
-- [ ] Check no 404 errors
-
----
-
-## 🎨 Color Scheme
-
-- **Primary Blue**: #1E3A8A
-- **Emergency Orange**: #F97316
-- **Success Green**: #16a34a
-- **Alert Red**: #DC2626
-- **Background Gray**: #F3F4F6
-
----
-
-## 📝 Notes
-
-### Backup Database
-```bash
-# Export database
-mysqldump -u root dms_db > backup.sql
-
-# Import database
-mysql -u root dms_db < backup.sql
+users ──┬──> requests ──> allocations
+        │        │              │
+        │        ▼              ▼
+        │   disasters      resources
+        │
+        └──> password_resets
 ```
 
-### Common Issues
+---
 
-| Issue | Solution |
-|-------|----------|
-| "Connection refused" | Verify MySQL is running in XAMPP |
-| Session expires immediately | Check `config/auth.php` session settings |
-| 404 errors on navigation | Ensure using absolute paths `/DMS/...` |
-| Low-stock alerts not showing | Verify threshold is set < 100 units |
+## ❓ Troubleshooting
 
-### Development Mode
-- All errors display on screen
-- Debug mode enabled for troubleshooting
-- Database queries are logged
+### MySQL won't start
+- Check if another MySQL instance is running on port 3306
+- Open XAMPP Config > `my.ini` and change the port if needed
+- Restart XAMPP
+
+### Apache won't start (Port 80 in use)
+- Skype, IIS, or another web server may be using port 80
+- Open XAMPP Config > `httpd.conf` and change `Listen 80` to `Listen 8080`
+- Access the app at `http://localhost:8080/DMS/`
+
+### "MySQL server has gone away" error
+- MySQL is not running → Start MySQL from XAMPP Control Panel
+
+### "Connection refused" error
+- Both Apache and MySQL must be running
+- Check XAMPP Control Panel — both should show green
+
+### Blank page or PHP errors
+- Enable error display in `C:\xampp\php\php.ini`:
+  ```ini
+  display_errors = On
+  error_reporting = E_ALL
+  ```
+- Restart Apache after changes
+
+### Database tables not found
+- Ensure you ran `database_schema.sql` first
+- Then run `migrations/add_password_resets.sql`
+- Verify in phpMyAdmin that 6 tables exist
+
+### Can't login with default credentials
+- Run `migrations/add_password_resets.sql` to update password hashes
+- Or manually reset in phpMyAdmin:
+  ```sql
+  UPDATE users SET password = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi' WHERE username = 'admin';
+  ```
 
 ---
 
-## 📞 Support
+## 📄 License
 
-For issues or questions:
-1. Check `test_connection.php` for connectivity
-2. Review error messages in browser console
-3. Check MySQL error logs in XAMPP
-4. Verify database schema is properly imported
+This project is licensed under the MIT License.
 
 ---
 
-## 📜 License
+## 👨‍💻 Author
 
-Proprietary - Disaster Relief Management System
+**Navin** — [GitHub](https://github.com/Navin248)
 
 ---
 
-**Last Updated**: March 16, 2026  
-**Version**: 4.0 (Phase 4 Complete)
+> Built with ❤️ for disaster relief coordination

@@ -225,17 +225,17 @@ $delivered_allocations = $conn->query("SELECT a.*, r.resource_name, d.type as di
                             <div class="card-body">
                                 <div class="timeline">
                                     <?php
-                                    $activity_query = "SELECT 'disaster' as type, d.type as title, d.date as activity_time, d.location as detail
-                                                       FROM disasters d ORDER BY d.date DESC LIMIT 5
+                                    $activity_query = "(SELECT 'disaster' as type, d.type as title, d.date as activity_time, d.location as detail
+                                                       FROM disasters d ORDER BY d.date DESC LIMIT 5)
                                                        UNION ALL
-                                                       SELECT 'request', r.resource_type, r.created_at, r.location
-                                                       FROM requests r ORDER BY r.created_at DESC LIMIT 5
+                                                       (SELECT 'request', r.resource_type, r.created_at, r.location
+                                                       FROM requests r ORDER BY r.created_at DESC LIMIT 5)
                                                        UNION ALL
-                                                       SELECT 'allocation', CONCAT(res.resource_name, ' allocated'), a.date, req.location
+                                                       (SELECT 'allocation', CONCAT(res.resource_name, ' allocated'), a.date, req.location
                                                        FROM allocations a
                                                        JOIN resources res ON a.resource_id = res.id
                                                        JOIN requests req ON a.request_id = req.id
-                                                       ORDER BY a.date DESC LIMIT 5
+                                                       ORDER BY a.date DESC LIMIT 5)
                                                        ORDER BY activity_time DESC LIMIT 10";
                                     $activity_result = $conn->query($activity_query);
                                     if ($activity_result && $activity_result->num_rows > 0) {
@@ -453,7 +453,7 @@ $delivered_allocations = $conn->query("SELECT a.*, r.resource_name, d.type as di
                 </div>
                 <div class="modal-body">
                     <?php 
-                    $delivered = $conn->query("SELECT a.*, r.resource_name, d.type as disaster_type FROM allocations a JOIN resources r ON a.resource_id = r.id JOIN disasters d ON a.disaster_id = d.id WHERE a.delivery_status = 'delivered' ORDER BY a.date DESC LIMIT 20");
+                    $delivered = $conn->query("SELECT a.*, r.resource_name, d.type as disaster_type FROM allocations a JOIN resources r ON a.resource_id = r.id JOIN requests req ON a.request_id = req.id JOIN disasters d ON req.disaster_id = d.id WHERE a.delivery_status = 'delivered' ORDER BY a.date DESC LIMIT 20");
                     if ($delivered && $delivered->num_rows > 0): 
                     ?>
                         <div class="table-responsive">
