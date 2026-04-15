@@ -4,7 +4,7 @@ require_once '../config/database.php';
 require_once '../config/auth.php';
 
 check_login();
-check_role('any');
+check_role('admin');  // Only admin can access
 
 $error = '';
 $success = '';
@@ -67,13 +67,12 @@ $result = $conn->query($query);
                 <?php include '../includes/header.php'; ?>
                 
                 <div class="container mt-4">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h2><i class="fas fa-map-marker-alt"></i> Disasters Management</h2>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4><i class="fas fa-map-marker-alt"></i> Disasters Management</h4>
                         <a href="add_disaster.php" class="btn btn-primary">
                             <i class="fas fa-plus"></i> Add Disaster
                         </a>
                     </div>
-                    <hr>
 
                     <!-- Alert Messages -->
                     <?php if ($error): ?>
@@ -92,9 +91,6 @@ $result = $conn->query($query);
 
                     <!-- Disasters Table -->
                     <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0"><i class="fas fa-list"></i> Active & Resolved Disasters</h5>
-                        </div>
                         <div class="card-body">
                             <?php if ($result->num_rows > 0): ?>
                                 <div class="table-responsive">

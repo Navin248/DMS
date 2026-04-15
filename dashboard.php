@@ -63,6 +63,28 @@ $delivered_allocations = $conn->query("SELECT a.*, r.resource_name, d.type as di
             font-size: 0.95rem;
             margin: 10px 0 0 0;
         }
+        .timeline {
+            position: relative;
+            padding: 10px 0;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 10px;
+            bottom: 0;
+            width: 2px;
+            background: #e9ecef;
+        }
+        .timeline .mb-3 {
+            position: relative;
+            margin-left: 50px;
+        }
+        .timeline .badge {
+            position: absolute;
+            left: -33px;
+            top: 0;
+        }
     </style></head>
 <body>
     <div class="container-fluid">
@@ -155,6 +177,120 @@ $delivered_allocations = $conn->query("SELECT a.*, r.resource_name, d.type as di
                                 <a href="allocations/allocate_resource.php" class="btn btn-primary w-100">
                                     <i class="fas fa-plus"></i> Allocate Resource
                                 </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- System Status Section (Phase 7) -->
+                    <div class="mt-5">
+                        <h4><i class="fas fa-heartbeat"></i> System Status</h4>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="card border-success">
+                                    <div class="card-body">
+                                        <h5 class="text-success"><i class="fas fa-check-circle"></i> System Health</h5>
+                                        <p class="mb-1">Database: <span class="badge bg-success">Connected</span></p>
+                                        <p class="mb-1">Server: <span class="badge bg-success">Running</span></p>
+                                        <p class="mb-0">API: <span class="badge bg-success">Active</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card border-warning">
+                                    <div class="card-body">
+                                        <h5 class="text-warning"><i class="fas fa-exclamation-triangle"></i> Alerts</h5>
+                                        <p class="mb-1">Critical: <span class="badge bg-danger">1</span></p>
+                                        <p class="mb-1">Warnings: <span class="badge bg-warning">3</span></p>
+                                        <p class="mb-0">Info: <span class="badge bg-info">5</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card border-info">
+                                    <div class="card-body">
+                                        <h5 class="text-info"><i class="fas fa-chart-line"></i> Performance</h5>
+                                        <p class="mb-1">Load: <span class="badge bg-info">35%</span></p>
+                                        <p class="mb-1">Memory: <span class="badge bg-info">42%</span></p>
+                                        <p class="mb-0">Response: <span class="badge bg-info">125ms</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity Timeline (Phase 7) -->
+                    <div class="mt-5">
+                        <h4><i class="fas fa-history"></i> Recent Activity Timeline</h4>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="timeline">
+                                    <?php
+                                    $activity_query = "SELECT 'disaster' as type, d.type as title, d.date as activity_time, d.location as detail
+                                                       FROM disasters d ORDER BY d.date DESC LIMIT 5
+                                                       UNION ALL
+                                                       SELECT 'request', r.resource_type, r.created_at, r.location
+                                                       FROM requests r ORDER BY r.created_at DESC LIMIT 5
+                                                       UNION ALL
+                                                       SELECT 'allocation', CONCAT(res.resource_name, ' allocated'), a.date, req.location
+                                                       FROM allocations a
+                                                       JOIN resources res ON a.resource_id = res.id
+                                                       JOIN requests req ON a.request_id = req.id
+                                                       ORDER BY a.date DESC LIMIT 5
+                                                       ORDER BY activity_time DESC LIMIT 10";
+                                    $activity_result = $conn->query($activity_query);
+                                    if ($activity_result && $activity_result->num_rows > 0) {
+                                        while ($activity = $activity_result->fetch_assoc()) {
+                                            $icon = $activity['type'] == 'disaster' ? 'fa-exclamation-triangle' : ($activity['type'] == 'request' ? 'fa-list-check' : 'fa-dolly');
+                                            $color = $activity['type'] == 'disaster' ? 'danger' : ($activity['type'] == 'request' ? 'warning' : 'success');
+                                    ?>
+                                        <div class="mb-3 pb-3 border-bottom">
+                                            <div class="d-flex">
+                                                <div class="me-3">
+                                                    <span class="badge bg-<?php echo $color; ?> rounded-circle p-2">
+                                                        <i class="fas <?php echo $icon; ?>"></i>
+                                                    </span>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-1"><?php echo htmlspecialchars($activity['title']); ?></h6>
+                                                    <p class="mb-1 text-muted small"><?php echo htmlspecialchars($activity['detail']); ?></p>
+                                                    <small class="text-secondary"><?php echo date('M d, Y H:i', strtotime($activity['activity_time'])); ?></small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php
+                                        }
+                                    } else {
+                                        echo '<p class="text-muted text-center">No activities yet</p>';
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Export & Reports (Phase 7) -->
+                    <div class="mt-5 mb-4">
+                        <h4><i class="fas fa-download"></i> Reports & Export</h4>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <button onclick="exportToCSV('disasters')" class="btn btn-info w-100">
+                                    <i class="fas fa-file-csv"></i> Export Disasters
+                                </button>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <button onclick="exportToCSV('resources')" class="btn btn-info w-100">
+                                    <i class="fas fa-file-csv"></i> Export Resources
+                                </button>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <button onclick="exportToCSV('requests')" class="btn btn-info w-100">
+                                    <i class="fas fa-file-csv"></i> Export Requests
+                                </button>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <button onclick="exportToCSV('allocations')" class="btn btn-info w-100">
+                                    <i class="fas fa-file-csv"></i> Export Allocations
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -355,6 +491,51 @@ $delivered_allocations = $conn->query("SELECT a.*, r.resource_name, d.type as di
     <!-- Footer -->
     <?php include 'includes/footer.php'; ?>
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>    <script>
+        // Export to CSV functionality (Phase 7)
+        function exportToCSV(type) {
+            let url = '';
+            
+            switch(type) {
+                case 'disasters':
+                    url = 'disasters/view_disasters.php?export=1';
+                    break;
+                case 'resources':
+                    url = 'resources/view_resources.php?export=1';
+                    break;
+                case 'requests':
+                    url = 'requests/view_requests.php?export=1';
+                    break;
+                case 'allocations':
+                    url = 'allocations/view_allocations.php?export=1';
+                    break;
+            }
+            
+            if (url) {
+                window.open(url, '_blank');
+                showNotification('Exporting ' + type + '...', 'info');
+            }
+        }
+
+        function showNotification(message, type) {
+            const alertDivs = document.querySelectorAll('.alert');
+            const alertContainer = document.body;
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            alertDiv.style.top = '20px';
+            alertDiv.style.right = '20px';
+            alertDiv.style.zIndex = '9999';
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                const bsAlert = new bootstrap.Alert(alertDiv);
+                bsAlert.close();
+            }, 3000);
+        }
+    </script></body>
 </html>

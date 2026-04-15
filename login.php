@@ -20,24 +20,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if ($result->num_rows > 0) {
             $user = $result->fetch_assoc();
-            // Verify password
+            
+            // Verify password using password_verify (bcrypt)
+            $password_valid = false;
+            
             if (password_verify($password, $user['password'])) {
+                // Bcrypt password matched
+                $password_valid = true;
+            } elseif (md5($password) === $user['password']) {
+                // Legacy MD5 password matched - auto-upgrade to bcrypt
+                $password_valid = true;
+                $new_hash = password_hash($password, PASSWORD_DEFAULT);
+                $upgrade_stmt = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
+                $upgrade_stmt->bind_param("si", $new_hash, $user['id']);
+                $upgrade_stmt->execute();
+            }
+            
+            if ($password_valid) {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['role'] = $user['role'];
                 $_SESSION['last_activity'] = time();
-                
-                // Redirect to originally requested page or dashboard
-                if (isset($_GET['redirect'])) {
-                    $redirect = $_GET['redirect'];
-                    // Ensure it's a relative path within the application
-                    if (strpos($redirect, '/DMS/') === 0) {
-                        header("Location: " . $redirect);
-                    } else {
-                        header("Location: /DMS/dashboard.php");
-                    }
+
+                // Role-based redirect
+                if ($user['role'] == 'admin') {
+                    header("Location: /DMS/admin/dashboard.php");
                 } else {
-                    header("Location: /DMS/dashboard.php");
+                    header("Location: /DMS/worker/dashboard.php");
                 }
                 exit();
             } else {
@@ -52,6 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -102,8 +112,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(20px); }
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(20px);
+            }
         }
 
         .login-wrapper {
@@ -127,8 +144,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         @keyframes slideInLeft {
-            from { opacity: 0; transform: translateX(-50px); }
-            to { opacity: 1; transform: translateX(0); }
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         .login-info h1 {
@@ -204,8 +228,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         @keyframes slideInRight {
-            from { opacity: 0; transform: translateX(50px); }
-            to { opacity: 1; transform: translateX(0); }
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         .login-header {
@@ -229,8 +260,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
         }
 
         .login-header h2 {
@@ -325,8 +363,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .alert-danger {
@@ -379,6 +424,83 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             color: #F97316;
         }
 
+        /* Role Selector Buttons */
+        .role-btn {
+            flex: 1;
+            padding: 12px 15px;
+            background: #F3F4F6;
+            border: 2px solid #E5E7EB;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #6B7280;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .role-btn i {
+            font-size: 1.2rem;
+        }
+
+        .role-btn:hover {
+            background: #E5E7EB;
+            border-color: #D1D5DB;
+            color: #1E3A8A;
+        }
+
+        .role-btn.active {
+            background: linear-gradient(135deg, #1E3A8A 0%, #0f2847 100%);
+            border-color: #1E3A8A;
+            color: white;
+            box-shadow: 0 5px 15px rgba(30, 58, 138, 0.2);
+        }
+
+        .demo-credentials {
+            background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%);
+            border-left: 4px solid #10B981;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: #5A5A5A;
+        }
+
+        .demo-credentials strong {
+            color: #059669;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .credential-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px dotted #D1FADF;
+        }
+
+        .credential-item:last-child {
+            border-bottom: none;
+        }
+
+        .credential-label {
+            color: #065F46;
+            font-weight: 600;
+        }
+
+        .credential-value {
+            color: #047857;
+            font-family: monospace;
+            font-weight: bold;
+        }
+
+        .back-link a:hover {
+            color: #F97316;
+        }
+
         /* Responsive */
         @media (max-width: 1024px) {
             .login-wrapper {
@@ -421,13 +543,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     </style>
 </head>
+
 <body>
     <div class="login-wrapper">
         <!-- Left Side - Information -->
         <div class="login-info">
             <h1><i class="fas fa-shield-alt"></i> DRMS</h1>
             <p>Disaster Relief Management System</p>
-            <p style="font-size: 1rem; color: #D1D5DB;">Coordinating rapid response to disasters and emergencies. Real-time tracking, resource management, and community support.</p>
+            <p style="font-size: 1rem; color: #D1D5DB;">Coordinating rapid response to disasters and emergencies.
+                Real-time tracking, resource management, and community support.</p>
 
             <ul class="features-list">
                 <li><i class="fas fa-map-location-dot"></i> Real-time disaster tracking</li>
@@ -466,13 +590,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
             <?php endif; ?>
 
+            <?php if (isset($_GET['reset']) && $_GET['reset'] == 'success'): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle"></i> <strong>Password Reset!</strong> Your password has been changed successfully. Please login with your new password.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
+            <!-- Role Selector Tabs -->
+            <div style="display: flex; gap: 10px; margin-bottom: 30px; justify-content: space-between;">
+                <button type="button" class="role-btn active" data-role="admin" data-username="admin"
+                    data-info="System Administrator">
+                    <i class="fas fa-shield-alt"></i> Admin
+                </button>
+                <button type="button" class="role-btn" data-role="coordinator" data-username="coordinator1"
+                    data-info="Relief Coordinator">
+                    <i class="fas fa-people-group"></i> Coordinator
+                </button>
+            </div>
+
             <form method="POST">
                 <div class="form-group">
-                    <label for="username">Username</label>
+                    <label for="username">
+                        <i class="fas fa-info-circle" style="color: #F97316;"></i> Username
+                        <span id="selectedRole"
+                            style="float: right; font-size: 0.85rem; color: #F97316; font-weight: bold;">Admin
+                            (Default)</span>
+                    </label>
                     <div class="input-wrapper">
                         <i class="fas fa-user"></i>
-                        <input type="text" class="form-control" id="username" name="username" 
-                               placeholder="Enter your username" required>
+                        <input type="text" class="form-control" id="username" name="username"
+                            placeholder="Enter your username" value="admin" required>
                     </div>
                 </div>
 
@@ -480,8 +628,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <label for="password">Password</label>
                     <div class="input-wrapper">
                         <i class="fas fa-lock"></i>
-                        <input type="password" class="form-control" id="password" name="password" 
-                               placeholder="Enter your password" required>
+                        <input type="password" class="form-control" id="password" name="password"
+                            placeholder="Enter your password" required>
                     </div>
                 </div>
 
@@ -489,6 +637,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <i class="fas fa-sign-in-alt"></i> Login to Dashboard
                 </button>
             </form>
+
+            <div style="text-align: center; margin-top: 15px;">
+                <a href="forgot_password.php" style="color: #F97316; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: color 0.3s ease;">
+                    <i class="fas fa-key"></i> Forgot Password?
+                </a>
+            </div>
 
             <div class="back-link">
                 <a href="index.php"><i class="fas fa-arrow-left"></i> Back to Home</a>
@@ -506,13 +660,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Add focus animation to form
         document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('focus', function() {
+            input.addEventListener('focus', function () {
                 this.parentElement.style.transform = 'scale(1.02)';
             });
-            input.addEventListener('blur', function() {
+            input.addEventListener('blur', function () {
                 this.parentElement.style.transform = 'scale(1)';
+            });
+        });
+
+        // Role Selector Button Handler
+        document.querySelectorAll('.role-btn').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                // Remove active class from all buttons
+                document.querySelectorAll('.role-btn').forEach(b => {
+                    b.classList.remove('active');
+                });
+
+                // Add active class to clicked button
+                this.classList.add('active');
+
+                // Get data from button
+                const username = this.getAttribute('data-username');
+                const roleInfo = this.getAttribute('data-info');
+
+                // Update username field
+                document.getElementById('username').value = username;
+                document.getElementById('selectedRole').textContent = roleInfo + ' (' + username + ')';
+
+                // Clear password field for security
+                document.getElementById('password').value = '';
+                document.getElementById('password').focus();
             });
         });
     </script>
 </body>
+
 </html>

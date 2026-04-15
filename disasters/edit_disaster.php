@@ -4,7 +4,7 @@ require_once '../config/database.php';
 require_once '../config/auth.php';
 
 check_login();
-check_role('any');
+check_role('admin');  // Only admin can edit disasters
 
 $error = '';
 $success = '';

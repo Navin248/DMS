@@ -4,7 +4,7 @@ require_once '../config/database.php';
 require_once '../config/auth.php';
 
 check_login();
-check_role('any');
+check_role('admin');  // Only admin can access resources
 
 $error = '';
 $success = '';
@@ -127,13 +127,12 @@ $low_stock_result = $conn->query($low_stock_query);
                 <?php include '../includes/header.php'; ?>
                 
                 <div class="container mt-4">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h2><i class="fas fa-box"></i> Resources Inventory</h2>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4><i class="fas fa-box"></i> Resources Inventory</h4>
                         <a href="add_resource.php" class="btn btn-primary">
                             <i class="fas fa-plus"></i> Add Resource
                         </a>
                     </div>
-                    <hr>
 
                     <!-- Alert Messages -->
                     <?php if ($error): ?>
@@ -167,12 +166,6 @@ $low_stock_result = $conn->query($low_stock_query);
 
                     <!-- Resources Table -->
                     <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0">
-                                <i class="fas fa-list"></i> Available Resources 
-                                <span class="badge bg-primary float-end"><?php echo $result->num_rows; ?> items</span>
-                            </h5>
-                        </div>
                         <div class="card-body">
                             <?php if ($result->num_rows > 0): ?>
                                 <div class="table-responsive">

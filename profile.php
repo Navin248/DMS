@@ -26,18 +26,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $error = 'All fields are required!';
         } elseif ($new_password != $confirm_password) {
             $error = 'New passwords do not match!';
-        } elseif (!password_verify($current_password, $user['password'])) {
-            $error = 'Current password is incorrect!';
+        } elseif (strlen($new_password) < 6) {
+            $error = 'Password must be at least 6 characters long!';
         } else {
-            $hashed_password = password_hash($new_password, PASSWORD_BCRYPT);
-            $query = "UPDATE users SET password = ? WHERE id = ?";
-            $stmt = $conn->prepare($query);
-            $stmt->bind_param("si", $hashed_password, $_SESSION['user_id']);
+            // Verify current password (supports both bcrypt and legacy MD5)
+            $current_valid = false;
+            if (password_verify($current_password, $user['password'])) {
+                $current_valid = true;
+            } elseif (md5($current_password) === $user['password']) {
+                $current_valid = true;
+            }
             
-            if ($stmt->execute()) {
-                $success = 'Password changed successfully!';
+            if (!$current_valid) {
+                $error = 'Current password is incorrect!';
             } else {
-                $error = 'Error updating password: ' . $conn->error;
+                $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+                $query = "UPDATE users SET password = ? WHERE id = ?";
+                $stmt = $conn->prepare($query);
+                $stmt->bind_param("si", $hashed_password, $_SESSION['user_id']);
+                
+                if ($stmt->execute()) {
+                    $success = 'Password changed successfully!';
+                } else {
+                    $error = 'Error updating password: ' . $conn->error;
+                }
             }
         }
     }
