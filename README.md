@@ -18,12 +18,11 @@ A comprehensive web-based system for managing disaster relief operations includi
   - [Step 1: Install XAMPP](#step-1-install-xampp)
   - [Step 2: Clone the Repository](#step-2-clone-the-repository)
   - [Step 3: Create the Database](#step-3-create-the-database)
-  - [Step 4: Run Migrations](#step-4-run-migrations)
+  - [Step 4: Configure Database Connection (Optional)](#step-4-configure-database-connection-optional)
   - [Step 5: Start the Server](#step-5-start-the-server)
   - [Step 6: Access the Application](#step-6-access-the-application)
 - [Default Login Credentials](#-default-login-credentials)
 - [Project Structure](#-project-structure)
-- [User Roles](#-user-roles)
 - [Troubleshooting](#-troubleshooting)
 
 ---
@@ -125,29 +124,21 @@ This will create the project at `C:\xampp\htdocs\DMS\`
 
    This will:
    - ✅ Create the `disaster_relief_system` database
-   - ✅ Create all 5 tables (`users`, `disasters`, `resources`, `requests`, `allocations`)
+   - ✅ Create all necessary tables (`users`, `disasters`, `resources`, `requests`, `allocations`, `password_resets`)
    - ✅ Insert sample data (users, disasters, resources)
 
 ---
 
-### Step 4: Run Migrations
+### Step 4: Configure Database Connection (Optional)
 
-After the main schema, run these migrations **in order**:
+By default, the system connects to MySQL on `localhost` port `3306`. If your XAMPP MySQL is running on a different port (e.g., `3307`):
 
-#### Migration 1: Password Resets Table
-```bash
-C:\xampp\mysql\bin\mysql.exe -u root disaster_relief_system < C:\xampp\htdocs\DMS\migrations\add_password_resets.sql
-```
-
-**Or in phpMyAdmin:**
-- Select the `disaster_relief_system` database from the left sidebar
-- Click the **SQL** tab
-- Paste the contents of `migrations/add_password_resets.sql`
-- Click **Go**
-
-This will:
-- ✅ Create the `password_resets` table
-- ✅ Migrate default user passwords from MD5 to bcrypt
+1. Open `C:\xampp\htdocs\DMS\config\database.php` in a text editor.
+2. Change the `$port` variable to match your XAMPP MySQL port:
+   ```php
+   $host = '127.0.0.1';
+   $port = 3307; // Update this to your MySQL port
+   ```
 
 ---
 
