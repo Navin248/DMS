@@ -15,12 +15,35 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
     background-color: var(--background);
     color: #333;
 }
 
+/* ============================
+   Global Font Size Scaling
+   ============================ */
+h1 { font-size: 2.2rem; }
+h2 { font-size: 1.85rem; }
+h3 { font-size: 1.55rem; }
+h4 { font-size: 1.3rem; }
+h5 { font-size: 1.15rem; }
+h6 { font-size: 1.05rem; }
+p, li, span, a, label, td, th, div {
+    font-size: inherit;
+}
+
 .navbar {
     background-color: var(--primary) !important;
+}
+
+.navbar-brand {
+    font-size: 1.4rem !important;
+}
+
+.nav-link {
+    font-size: 1.05rem !important;
 }
 
 .btn-primary {
@@ -46,15 +69,36 @@ body {
 .card-header {
     background-color: var(--primary);
     color: white;
+    font-size: 1.1rem;
+}
+
+.card-body {
+    font-size: 1rem;
+}
+
+.card-title {
+    font-size: 1.2rem;
 }
 
 table {
     background-color: white;
+    font-size: 1rem;
 }
 
 .table th {
     background-color: var(--primary);
     color: white;
+    font-size: 1rem;
+    padding: 12px 15px;
+}
+
+.table td {
+    padding: 11px 15px;
+    font-size: 1rem;
+}
+
+.alert {
+    font-size: 1rem;
 }
 
 .alert-warning {
@@ -68,7 +112,8 @@ table {
 }
 
 .badge {
-    padding: 8px 12px;
+    padding: 8px 14px;
+    font-size: 0.9rem;
 }
 
 .status-pending {
@@ -87,7 +132,7 @@ table {
 }
 
 .icon-lg {
-    font-size: 30px;
+    font-size: 34px;
     color: var(--secondary);
 }
 
@@ -95,6 +140,13 @@ table {
 .form-control, .form-select {
     border-radius: 5px;
     border: 1px solid #ddd;
+    font-size: 1rem;
+    padding: 10px 14px;
+}
+
+.form-label {
+    font-size: 1rem;
+    font-weight: 500;
 }
 
 .form-control:focus, .form-select:focus {
@@ -106,6 +158,18 @@ table {
 .btn {
     border-radius: 5px;
     font-weight: 500;
+    font-size: 1rem;
+    padding: 10px 20px;
+}
+
+.btn-sm {
+    font-size: 0.9rem;
+    padding: 6px 14px;
+}
+
+.btn-lg {
+    font-size: 1.15rem;
+    padding: 12px 28px;
 }
 
 /* Sidebar */
@@ -114,11 +178,20 @@ nav {
     top: 0;
 }
 
+nav .nav-link, nav a {
+    font-size: 1.05rem !important;
+    padding: 10px 18px !important;
+}
+
+nav h5, nav h6, nav .sidebar-heading {
+    font-size: 1.1rem;
+}
+
 /* Dashboard Cards */
 .dashboard-card {
     background: white;
     border-radius: 8px;
-    padding: 20px;
+    padding: 25px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
@@ -126,13 +199,36 @@ nav {
 .dashboard-card h3 {
     color: var(--primary);
     font-weight: bold;
+    font-size: 2.2rem;
     margin: 10px 0;
 }
 
+.dashboard-card p {
+    font-size: 1.05rem;
+}
+
 .dashboard-card .number {
-    font-size: 32px;
+    font-size: 36px;
     color: var(--secondary);
     font-weight: bold;
+}
+
+/* Modal */
+.modal-title {
+    font-size: 1.25rem;
+}
+
+.modal-body {
+    font-size: 1rem;
+}
+
+/* Breadcrumb & Small Text */
+.breadcrumb {
+    font-size: 0.95rem;
+}
+
+small, .small, .text-muted {
+    font-size: 0.9rem !important;
 }
 
 /* Responsive */
@@ -140,4 +236,12 @@ nav {
     nav {
         position: static;
     }
+    body {
+        font-size: 15px;
+    }
+    h1 { font-size: 1.8rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.3rem; }
+    .dashboard-card h3 { font-size: 1.8rem; }
+    .table th, .table td { padding: 9px 10px; font-size: 0.95rem; }
 }
