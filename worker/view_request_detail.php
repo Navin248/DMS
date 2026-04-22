@@ -79,6 +79,41 @@ $allocations = $conn->query("SELECT a.id, a.quantity_allocated, a.delivery_statu
                             WHERE a.request_id=$request_id
                             ORDER BY a.created_at DESC");
 
+// Compute real-time overall status based on allocations
+$allocations_data = [];
+$has_in_transit = false;
+$has_delivered = false;
+$all_delivered = true;
+$has_allocations = false;
+
+if ($allocations && $allocations->num_rows > 0) {
+    $has_allocations = true;
+    while ($alloc = $allocations->fetch_assoc()) {
+        $allocations_data[] = $alloc;
+        if ($alloc['delivery_status'] === 'in_transit') {
+            $has_in_transit = true;
+            $all_delivered = false;
+        } elseif ($alloc['delivery_status'] === 'delivered') {
+            $has_delivered = true;
+        } else {
+            $all_delivered = false;
+        }
+    }
+} else {
+    $all_delivered = false;
+}
+
+$overall_status = $request['status'];
+if ($has_allocations) {
+    if ($all_delivered) {
+        $overall_status = 'delivered';
+    } elseif ($has_in_transit || $has_delivered) {
+        $overall_status = 'in_transit';
+    } else {
+        $overall_status = 'allocated';
+    }
+}
+
 $status_colors = [
     'pending' => '#ffc107',
     'approved' => '#28a745',
@@ -226,21 +261,21 @@ $approval_colors = [
                                         <small class="badge bg-danger">Rejected</small>
                                     <?php endif; ?>
                                 </div>
-                                <div class="workflow-step <?php echo ($request['status'] !== 'pending' && $request['approval_status'] === 'approved') ? 'completed' : ''; ?>">
+                                <div class="workflow-step <?php echo ($overall_status !== 'pending' && $request['approval_status'] === 'approved') ? 'completed' : ''; ?>">
                                     <div class="step-circle">3</div>
                                     <p><strong>Allocated</strong></p>
-                                    <?php if ($request['status'] !== 'pending' && $request['approval_status'] === 'approved'): ?>
+                                    <?php if ($overall_status !== 'pending' && $request['approval_status'] === 'approved'): ?>
                                         <small class="text-muted">Allocated</small>
                                     <?php else: ?>
                                         <small class="text-muted">Waiting...</small>
                                     <?php endif; ?>
                                 </div>
-                                <div class="workflow-step <?php echo in_array($request['status'], ['in_transit', 'delivered']) ? 'completed' : ''; ?>">
+                                <div class="workflow-step <?php echo in_array($overall_status, ['in_transit', 'delivered']) ? 'completed' : ''; ?>">
                                     <div class="step-circle">4</div>
                                     <p><strong>In Transit</strong></p>
                                     <small class="text-muted">Tracking...</small>
                                 </div>
-                                <div class="workflow-step <?php echo ($request['status'] === 'delivered') ? 'completed' : ''; ?>">
+                                <div class="workflow-step <?php echo ($overall_status === 'delivered') ? 'completed' : ''; ?>">
                                     <div class="step-circle">5</div>
                                     <p><strong>Delivered</strong></p>
                                     <small class="text-muted">Complete</small>
@@ -310,8 +345,8 @@ $approval_colors = [
                                     <div class="detail-info">
                                         <div class="info-row">
                                             <span>Current Status:</span>
-                                            <span class="badge badge-lg" style="background: <?php echo $status_colors[$request['status']] ?? '#6c757d'; ?>;">
-                                                <?php echo ucfirst(str_replace('_', ' ', $request['status'])); ?>
+                                            <span class="badge badge-lg" style="background: <?php echo $status_colors[$overall_status] ?? '#6c757d'; ?>;">
+                                                <?php echo ucfirst(str_replace('_', ' ', $overall_status)); ?>
                                             </span>
                                         </div>
                                         <div class="info-row">
@@ -342,8 +377,8 @@ $approval_colors = [
                             <h5 class="mb-0"><i class="fas fa-cube"></i> Allocation & Delivery Tracking</h5>
                         </div>
                         <div class="card-body">
-                            <?php if ($allocations && $allocations->num_rows > 0): ?>
-                                <?php while ($alloc = $allocations->fetch_assoc()): ?>
+                            <?php if ($has_allocations): ?>
+                                <?php foreach ($allocations_data as $alloc): ?>
                                     <div class="allocation-card">
                                         <div class="row">
                                             <div class="col-md-4">
@@ -375,7 +410,7 @@ $approval_colors = [
                                             </div>
                                         </div>
                                     </div>
-                                <?php endwhile; ?>
+                                <?php endforeach; ?>
                             <?php else: ?>
                                 <div class="alert alert-info mb-0">
                                     <i class="fas fa-info-circle"></i> 

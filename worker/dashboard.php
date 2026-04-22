@@ -9,16 +9,29 @@ check_role('user');
 $user = get_user_info();
 $worker_id = $_SESSION['user_id'];
 
-// Get worker-specific statistics
-$my_pending = $conn->query("SELECT COUNT(*) as count FROM requests WHERE user_id=$worker_id AND approval_status='pending'")->fetch_assoc()['count'];
-$my_approved = $conn->query("SELECT COUNT(*) as count FROM requests WHERE user_id=$worker_id AND approval_status='approved'")->fetch_assoc()['count'];
-$my_allocated = $conn->query("SELECT COUNT(*) as count FROM requests WHERE user_id=$worker_id AND status='allocated'")->fetch_assoc()['count'];
-$my_delivered = $conn->query("SELECT COUNT(*) as count FROM requests WHERE user_id=$worker_id AND status='delivered'")->fetch_assoc()['count'];
-$my_rejected = $conn->query("SELECT COUNT(*) as count FROM requests WHERE user_id=$worker_id AND approval_status='rejected'")->fetch_assoc()['count'];
-$total_requests = $my_pending + $my_approved + $my_allocated + $my_delivered + $my_rejected;
+// Get worker-specific accurate statistics
+$stats_query = "SELECT 
+    COUNT(DISTINCT CASE WHEN r.approval_status = 'pending' THEN r.id END) as pending,
+    COUNT(DISTINCT CASE WHEN r.approval_status = 'approved' THEN r.id END) as approved,
+    COUNT(DISTINCT CASE WHEN a.delivery_status = 'pending' OR (r.status = 'allocated' AND a.id IS NULL) THEN r.id END) as allocated,
+    COUNT(DISTINCT CASE WHEN a.delivery_status = 'delivered' OR r.status = 'delivered' THEN r.id END) as delivered,
+    COUNT(DISTINCT CASE WHEN r.approval_status = 'rejected' THEN r.id END) as rejected
+    FROM requests r
+    LEFT JOIN allocations a ON r.id = a.request_id
+    WHERE r.user_id=$worker_id";
 
-// Get my recent requests
-$my_requests = $conn->query("SELECT r.id, r.resource_type, r.quantity, r.priority, r.status, r.approval_status, r.created_at, r.location, d.type as disaster_type
+$stats_result = $conn->query($stats_query)->fetch_assoc();
+
+$my_pending = $stats_result['pending'] ?? 0;
+$my_approved = $stats_result['approved'] ?? 0;
+$my_allocated = $stats_result['allocated'] ?? 0;
+$my_delivered = $stats_result['delivered'] ?? 0;
+$my_rejected = $stats_result['rejected'] ?? 0;
+$total_requests = $conn->query("SELECT COUNT(*) as count FROM requests WHERE user_id=$worker_id")->fetch_assoc()['count'];
+
+// Get my recent requests with real-time status
+$my_requests = $conn->query("SELECT r.id, r.resource_type, r.quantity, r.priority, r.status, r.approval_status, r.created_at, r.location, d.type as disaster_type,
+                            COALESCE((SELECT MAX(delivery_status) FROM allocations WHERE request_id = r.id), r.status) as real_status
                             FROM requests r
                             LEFT JOIN disasters d ON r.disaster_id = d.id
                             WHERE r.user_id=$worker_id
@@ -188,8 +201,16 @@ $my_allocations = $conn->query("SELECT a.id, a.delivery_status, a.created_at, r.
                                                                 </span>
                                                             </td>
                                                             <td>
-                                                                <span class="status-badge" style="background: <?php echo ($req['status']=='pending' ? '#ffc107' : ($req['status']=='allocated' ? '#007bff' : '#17a2b8')); ?>; color: white;">
-                                                                    <?php echo substr(ucfirst($req['status']), 0, 1); ?>
+                                                                <?php 
+                                                                    $r_status = $req['real_status'];
+                                                                    if ($r_status == 'pending') $bg = '#ffc107';
+                                                                    elseif ($r_status == 'allocated') $bg = '#007bff';
+                                                                    elseif ($r_status == 'in_transit') $bg = '#17a2b8';
+                                                                    elseif ($r_status == 'delivered') $bg = '#28a745';
+                                                                    else $bg = '#6c757d';
+                                                                ?>
+                                                                <span class="status-badge" style="background: <?php echo $bg; ?>; color: white;">
+                                                                    <?php echo substr(ucfirst(str_replace('_', ' ', $r_status)), 0, 1); ?>
                                                                 </span>
                                                             </td>
                                                         </tr>

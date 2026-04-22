@@ -47,13 +47,13 @@ $total = $requests->num_rows;
 
 // Get accurate real-time statistics
 $stats_query = "SELECT 
-    SUM(CASE WHEN r.status = 'pending' AND a.id IS NULL THEN 1 ELSE 0 END) as pending,
-    SUM(CASE WHEN a.delivery_status = 'pending' OR (r.status = 'allocated' AND a.id IS NULL) THEN 1 ELSE 0 END) as allocated,
-    SUM(CASE WHEN a.delivery_status = 'in_transit' THEN 1 ELSE 0 END) as in_transit,
-    SUM(CASE WHEN a.delivery_status = 'delivered' OR r.status = 'delivered' THEN 1 ELSE 0 END) as delivered,
-    SUM(CASE WHEN r.approval_status = 'pending' THEN 1 ELSE 0 END) as pending_approval,
-    SUM(CASE WHEN r.approval_status = 'approved' THEN 1 ELSE 0 END) as approved,
-    SUM(CASE WHEN r.approval_status = 'rejected' THEN 1 ELSE 0 END) as rejected
+    COUNT(DISTINCT CASE WHEN r.status = 'pending' AND a.id IS NULL THEN r.id END) as pending,
+    COUNT(DISTINCT CASE WHEN a.delivery_status = 'pending' OR (r.status = 'allocated' AND a.id IS NULL) THEN r.id END) as allocated,
+    COUNT(DISTINCT CASE WHEN a.delivery_status = 'in_transit' THEN r.id END) as in_transit,
+    COUNT(DISTINCT CASE WHEN a.delivery_status = 'delivered' OR r.status = 'delivered' THEN r.id END) as delivered,
+    COUNT(DISTINCT CASE WHEN r.approval_status = 'pending' THEN r.id END) as pending_approval,
+    COUNT(DISTINCT CASE WHEN r.approval_status = 'approved' THEN r.id END) as approved,
+    COUNT(DISTINCT CASE WHEN r.approval_status = 'rejected' THEN r.id END) as rejected
     FROM requests r
     LEFT JOIN allocations a ON r.id = a.request_id
     WHERE r.user_id=$worker_id";
