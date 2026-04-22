@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 // Get all users
-$users_query = "SELECT id, username, role, location, created_at, updated_at FROM users ORDER BY role ASC, username ASC";
+$users_query = "SELECT id, username, email, role, location, created_at, updated_at FROM users ORDER BY role ASC, username ASC";
 $users_result = $conn->query($users_query);
 ?>
 
@@ -258,10 +258,10 @@ $users_result = $conn->query($users_query);
                                     <tr>
                                         <th>#</th>
                                         <th>User</th>
+                                        <th>Email</th>
                                         <th>Role</th>
                                         <th>Location</th>
                                         <th>Created</th>
-                                        <th>Last Updated</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -283,6 +283,7 @@ $users_result = $conn->query($users_query);
                                                     </div>
                                                 </div>
                                             </td>
+                                            <td><?php echo htmlspecialchars($u['email'] ?? '—'); ?></td>
                                             <td>
                                                 <span class="<?php echo $u['role'] == 'admin' ? 'role-badge-admin' : 'role-badge-user'; ?>">
                                                     <?php echo strtoupper($u['role']); ?>
@@ -290,7 +291,6 @@ $users_result = $conn->query($users_query);
                                             </td>
                                             <td><?php echo htmlspecialchars($u['location'] ?? 'N/A'); ?></td>
                                             <td><?php echo date('M d, Y', strtotime($u['created_at'])); ?></td>
-                                            <td><?php echo date('M d, Y H:i', strtotime($u['updated_at'])); ?></td>
                                             <td>
                                                 <button class="btn-reset-password" 
                                                         data-bs-toggle="modal" 

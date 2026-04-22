@@ -5,16 +5,20 @@ require_once 'config/database.php';
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = isset($_POST['username']) ? trim($_POST['username']) : '';
+    $login_input = isset($_POST['username']) ? trim($_POST['username']) : '';
     $password = isset($_POST['password']) ? trim($_POST['password']) : '';
 
-    if (empty($username) || empty($password)) {
-        $error = 'Username and password are required!';
+    if (empty($login_input) || empty($password)) {
+        $error = 'Username/Email and password are required!';
     } else {
-        // Query to find user
-        $query = "SELECT * FROM users WHERE username = ?";
+        // Determine if input is email or username
+        if (strpos($login_input, '@') !== false) {
+            $query = "SELECT * FROM users WHERE email = ?";
+        } else {
+            $query = "SELECT * FROM users WHERE username = ?";
+        }
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("s", $username);
+        $stmt->bind_param("s", $login_input);
         $stmt->execute();
         $result = $stmt->get_result();
 
@@ -39,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($password_valid) {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
+                $_SESSION['email'] = $user['email'] ?? '';
                 $_SESSION['role'] = $user['role'];
                 $_SESSION['last_activity'] = time();
 
@@ -53,11 +58,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $error = 'Invalid password!';
             }
         } else {
-            $error = 'User not found!';
+            $error = 'User not found! Check your username or email.';
         }
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -612,7 +618,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <form method="POST">
                 <div class="form-group">
                     <label for="username">
-                        <i class="fas fa-info-circle" style="color: #F97316;"></i> Username
+                        <i class="fas fa-info-circle" style="color: #F97316;"></i> Username or Email
                         <span id="selectedRole"
                             style="float: right; font-size: 0.85rem; color: #F97316; font-weight: bold;">Admin
                             (Default)</span>
@@ -620,7 +626,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="input-wrapper">
                         <i class="fas fa-user"></i>
                         <input type="text" class="form-control" id="username" name="username"
-                            placeholder="Enter your username" value="admin" required>
+                            placeholder="Enter username or email" value="admin" required>
                     </div>
                 </div>
 

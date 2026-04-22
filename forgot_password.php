@@ -7,15 +7,19 @@ $success = '';
 $reset_link = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = isset($_POST['username']) ? trim($_POST['username']) : '';
+    $login_input = isset($_POST['username']) ? trim($_POST['username']) : '';
 
-    if (empty($username)) {
-        $error = 'Please enter your username!';
+    if (empty($login_input)) {
+        $error = 'Please enter your username or email!';
     } else {
-        // Check if user exists
-        $query = "SELECT id, username FROM users WHERE username = ?";
+        // Check if user exists by email or username
+        if (strpos($login_input, '@') !== false) {
+            $query = "SELECT id, username, email FROM users WHERE email = ?";
+        } else {
+            $query = "SELECT id, username, email FROM users WHERE username = ?";
+        }
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("s", $username);
+        $stmt->bind_param("s", $login_input);
         $stmt->execute();
         $result = $stmt->get_result();
 
@@ -46,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $error = 'Something went wrong. Please try again.';
             }
         } else {
-            $error = 'Username not found! Please check and try again.';
+            $error = 'User not found! Please check your username or email and try again.';
         }
     }
 }
@@ -358,7 +362,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="forgot-header">
             <div class="logo"><i class="fas fa-key"></i></div>
             <h2>Forgot Password?</h2>
-            <p>Don't worry! Enter your username below and we'll generate a password reset link for you.</p>
+            <p>Don't worry! Enter your username or email below and we'll generate a password reset link for you.</p>
         </div>
 
         <?php if ($error): ?>
@@ -378,18 +382,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <?php if (empty($reset_link)): ?>
             <div class="info-box">
                 <i class="fas fa-info-circle"></i>
-                Enter the username associated with your account. A reset link will be generated for you.
+                Enter the username or email associated with your account. A reset link will be generated for you.
             </div>
 
             <form method="POST">
                 <div class="form-group">
                     <label for="username">
-                        <i class="fas fa-info-circle" style="color: #F97316;"></i> Username
+                        <i class="fas fa-info-circle" style="color: #F97316;"></i> Username or Email
                     </label>
                     <div class="input-wrapper">
                         <i class="fas fa-user"></i>
                         <input type="text" class="form-control" id="username" name="username"
-                            placeholder="Enter your username" required autofocus>
+                            placeholder="Enter your username or email" required autofocus>
                     </div>
                 </div>
 

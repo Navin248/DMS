@@ -14,6 +14,7 @@ USE `disaster_relief_system`;
 CREATE TABLE IF NOT EXISTS `users` (
     `id` INT PRIMARY KEY AUTO_INCREMENT,
     `username` VARCHAR(100) NOT NULL UNIQUE,
+    `email` VARCHAR(255) DEFAULT NULL UNIQUE,
     `password` VARCHAR(255) NOT NULL,
     `role` VARCHAR(50) NOT NULL DEFAULT 'user',
     `location` VARCHAR(255),
@@ -106,9 +107,9 @@ CREATE TABLE IF NOT EXISTS `allocations` (
 -- Insert Sample Users
 -- Admin: admin / admin123 (password hashed with MD5)
 -- Coordinator: coordinator1 / coord123
-INSERT INTO `users` (`username`, `password`, `role`, `location`) VALUES 
-('admin', '0192023a7bbd73250516f069df18b500', 'admin', 'Central Office'),
-('coordinator1', '3b5d5c3712955042212316173ccf37be', 'user', 'Field Office');
+INSERT INTO `users` (`username`, `email`, `password`, `role`, `location`) VALUES 
+('admin', 'admin@drms.com', '0192023a7bbd73250516f069df18b500', 'admin', 'Central Office'),
+('coordinator1', 'coordinator1@drms.com', '3b5d5c3712955042212316173ccf37be', 'user', 'Field Office');
 
 -- Insert Sample Disasters
 INSERT INTO `disasters` (`type`, `location`, `latitude`, `longitude`, `severity`, `affected_population`, `status`, `date`) VALUES 

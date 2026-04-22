@@ -13,8 +13,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $action = $_POST['action'] ?? '';
     
     if ($action == 'update_profile') {
-        // Profile update logic can be added here
-        $success = 'Profile updated successfully!';
+        $new_email = isset($_POST['email']) ? trim($_POST['email']) : '';
+        
+        if (!empty($new_email) && !filter_var($new_email, FILTER_VALIDATE_EMAIL)) {
+            $error = 'Please enter a valid email address!';
+        } else {
+            // Check if email is already taken by another user
+            if (!empty($new_email)) {
+                $check_stmt = $conn->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
+                $check_stmt->bind_param("si", $new_email, $_SESSION['user_id']);
+                $check_stmt->execute();
+                if ($check_stmt->get_result()->num_rows > 0) {
+                    $error = 'This email is already in use by another account!';
+                }
+            }
+            
+            if (empty($error)) {
+                $email_value = !empty($new_email) ? $new_email : null;
+                $update_stmt = $conn->prepare("UPDATE users SET email = ? WHERE id = ?");
+                $update_stmt->bind_param("si", $email_value, $_SESSION['user_id']);
+                if ($update_stmt->execute()) {
+                    $_SESSION['email'] = $email_value;
+                    $success = 'Profile updated successfully!';
+                    $user = get_user_info(); // Refresh user data
+                } else {
+                    $error = 'Error updating profile: ' . $conn->error;
+                }
+            }
+        }
     }
     
     if ($action == 'change_password') {
@@ -103,12 +129,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <div class="card-body text-center">
                                     <i class="fas fa-user-circle" style="font-size: 80px; color: #F97316;"></i>
                                     <h3 class="mt-3"><?php echo htmlspecialchars($user['username']); ?></h3>
+                                    <?php if (!empty($user['email'])): ?>
+                                        <p class="text-muted mb-1"><i class="fas fa-envelope"></i> <?php echo htmlspecialchars($user['email']); ?></p>
+                                    <?php endif; ?>
                                     <p class="text-muted">
                                         <span class="badge bg-primary"><?php echo strtoupper($user['role']); ?></span>
                                     </p>
                                     <small class="text-muted">
                                         Joined: <?php echo date('M d, Y', strtotime($user['created_at'])); ?>
                                     </small>
+                                </div>
+                            </div>
+
+                            <!-- Update Email Form -->
+                            <div class="card mt-3">
+                                <div class="card-header bg-info text-white">
+                                    <h5 class="mb-0"><i class="fas fa-envelope"></i> Update Email</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form method="POST" action="">
+                                        <input type="hidden" name="action" value="update_profile">
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">Email Address</label>
+                                            <input type="email" class="form-control" id="email" name="email" 
+                                                   value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>"
+                                                   placeholder="Enter your email address">
+                                        </div>
+                                        <button type="submit" class="btn btn-info text-white">
+                                            <i class="fas fa-save"></i> Update Email
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -157,15 +207,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             <p><?php echo htmlspecialchars($user['username']); ?></p>
                                         </div>
                                         <div class="col-md-6">
-                                            <strong>Role:</strong>
-                                            <p><span class="badge bg-primary"><?php echo strtoupper($user['role']); ?></span></p>
+                                            <strong>Email:</strong>
+                                            <p><?php echo htmlspecialchars($user['email'] ?? 'Not set'); ?></p>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col-md-6">
+                                            <strong>Role:</strong>
+                                            <p><span class="badge bg-primary"><?php echo strtoupper($user['role']); ?></span></p>
+                                        </div>
+                                        <div class="col-md-6">
                                             <strong>Account Created:</strong>
                                             <p><?php echo date('M d, Y H:i', strtotime($user['created_at'])); ?></p>
                                         </div>
+                                    </div>
+                                    <div class="row mb-3">
                                         <div class="col-md-6">
                                             <strong>Last Updated:</strong>
                                             <p><?php echo date('M d, Y H:i', strtotime($user['updated_at'])); ?></p>

@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 // Validate token
 if (!empty($token)) {
-    $query = "SELECT pr.*, u.username FROM password_resets pr 
+    $query = "SELECT pr.*, u.username, u.email FROM password_resets pr 
               JOIN users u ON pr.user_id = u.id 
               WHERE pr.token = ? AND pr.used = 0 AND pr.expires_at > NOW()";
     $stmt = $conn->prepare($query);
@@ -27,7 +27,7 @@ if (!empty($token)) {
         $valid_token = true;
     } else {
         // Check if token exists but is expired or used
-        $check_query = "SELECT pr.*, u.username FROM password_resets pr 
+        $check_query = "SELECT pr.*, u.username, u.email FROM password_resets pr 
                         JOIN users u ON pr.user_id = u.id 
                         WHERE pr.token = ?";
         $check_stmt = $conn->prepare($check_query);
@@ -425,6 +425,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $valid_token) {
                 <div class="user-badge">
                     <i class="fas fa-user"></i>
                     <?php echo htmlspecialchars($reset_data['username']); ?>
+                    <?php if (!empty($reset_data['email'])): ?>
+                        <span style="color: #6B7280; font-weight: normal;">| <?php echo htmlspecialchars($reset_data['email']); ?></span>
+                    <?php endif; ?>
                 </div>
             </div>
 
