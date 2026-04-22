@@ -123,8 +123,8 @@ CREATE TABLE IF NOT EXISTS `allocations` (
 -- Admin: admin / admin123 (password hashed with bcrypt)
 -- Coordinator: coordinator1 / coord123
 INSERT INTO `users` (`username`, `email`, `password`, `role`, `location`) VALUES 
-('admin', 'admin@drms.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', 'Central Office'),
-('coordinator1', 'coordinator1@drms.com', '$2y$10$zGpWLkXbS0eNdOxPjKQrTuqFJmXvk.5r9y3dKjWx8nqBdXvLhKyHu', 'user', 'Field Office');
+('admin', 'admin@drms.com', '$2y$10$eAN.fPNl/NIkJVoxNnP9ReO4GCaESmV9URMs6YX8RAJ086xPJKyzG', 'admin', 'Central Office'),
+('coordinator1', 'coordinator1@drms.com', '$2y$10$Pcf6isNwRcworX7YHT.eK.aQ9msf9rcIranSvN0MrDYJY73uN/l6u', 'user', 'Field Office');
 
 -- Insert Sample Disasters
 INSERT INTO `disasters` (`type`, `location`, `latitude`, `longitude`, `severity`, `affected_population`, `status`, `date`) VALUES 
