@@ -267,12 +267,13 @@ The database connection is configured in `config/database.php`:
 
 ```php
 define('DB_HOST', 'localhost');
+define('DB_PORT', 3307);             // MySQL port (default XAMPP: 3306)
 define('DB_USER', 'root');
-define('DB_PASS', '');           // Default XAMPP has no password
+define('DB_PASS', '');               // Default XAMPP has no password
 define('DB_NAME', 'disaster_relief_system');
 ```
 
-If your MySQL has a password, update `DB_PASS` accordingly.
+If your MySQL uses the default port 3306, change `DB_PORT` to `3306`.
 
 ---
 
@@ -303,8 +304,8 @@ users ──┬──> requests ──> allocations
 ## ❓ Troubleshooting
 
 ### MySQL won't start
-- Check if another MySQL instance is running on port 3306
-- Open XAMPP Config > `my.ini` and change the port if needed
+- Check if another MySQL instance is running on port 3307
+- Open XAMPP Config > `my.ini` and verify the port is set to 3307
 - Restart XAMPP
 
 ### Apache won't start (Port 80 in use)
