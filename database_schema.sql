@@ -23,6 +23,21 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================================
+-- TABLE 1.5: PASSWORD_RESETS (Token-based password resets)
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS `password_resets` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `user_id` INT NOT NULL,
+    `token` VARCHAR(255) NOT NULL UNIQUE,
+    `expires_at` DATETIME NOT NULL,
+    `used` TINYINT DEFAULT 0,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
+    KEY `idx_token` (`token`),
+    KEY `idx_expires` (`expires_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================================================
 -- TABLE 2: DISASTERS (Disaster Events)
 -- ============================================================================
 CREATE TABLE IF NOT EXISTS `disasters` (
@@ -105,11 +120,11 @@ CREATE TABLE IF NOT EXISTS `allocations` (
 -- ============================================================================
 
 -- Insert Sample Users
--- Admin: admin / admin123 (password hashed with MD5)
+-- Admin: admin / admin123 (password hashed with bcrypt)
 -- Coordinator: coordinator1 / coord123
 INSERT INTO `users` (`username`, `email`, `password`, `role`, `location`) VALUES 
-('admin', 'admin@drms.com', '0192023a7bbd73250516f069df18b500', 'admin', 'Central Office'),
-('coordinator1', 'coordinator1@drms.com', '3b5d5c3712955042212316173ccf37be', 'user', 'Field Office');
+('admin', 'admin@drms.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', 'Central Office'),
+('coordinator1', 'coordinator1@drms.com', '$2y$10$zGpWLkXbS0eNdOxPjKQrTuqFJmXvk.5r9y3dKjWx8nqBdXvLhKyHu', 'user', 'Field Office');
 
 -- Insert Sample Disasters
 INSERT INTO `disasters` (`type`, `location`, `latitude`, `longitude`, `severity`, `affected_population`, `status`, `date`) VALUES 

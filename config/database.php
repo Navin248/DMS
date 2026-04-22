@@ -1,19 +1,20 @@
 <?php
 // Database Configuration
 define('DB_HOST', 'localhost');
-define('DB_PORT', 3307);
 define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB_NAME', 'disaster_relief_system');
 
 // Create Connection
+$conn = null;
 try {
-    $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
+    $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
     // Check Connection
     if ($conn->connect_error) {
+        $db_error = $conn->connect_error;
         $conn = null;
-        error_log("Database Connection Failed: " . $conn->connect_error);
+        error_log("Database Connection Failed: " . $db_error);
     } else {
         // Set charset to UTF-8
         $conn->set_charset("utf8");

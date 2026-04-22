@@ -10,6 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (empty($login_input) || empty($password)) {
         $error = 'Username/Email and password are required!';
+    } elseif (!$conn) {
+        $error = 'Database connection failed. Please ensure MySQL is running and try again.';
     } else {
         // Determine if input is email or username
         if (strpos($login_input, '@') !== false) {
