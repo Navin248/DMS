@@ -55,11 +55,15 @@ if (isset($_GET['confirm_receive']) && isset($_GET['alloc_id'])) {
             $pending_allocs->execute();
             $pending_allocs->bind_result($remaining);
             $pending_allocs->fetch();
+            $pending_allocs->close(); // Close the statement before running the next one to fix "Commands out of sync" error
+            
             if ($remaining == 0) {
                 $req_upd = $conn->prepare("UPDATE requests SET status = 'delivered' WHERE id = ?");
                 $req_upd->bind_param("i", $request_id);
                 $req_upd->execute();
+                $req_upd->close();
             }
+            $check_alloc->close();
             header("Location: view_request_detail.php?id=$request_id&success=" . urlencode('Marked as received successfully.'));
             exit();
         }
