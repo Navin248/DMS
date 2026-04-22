@@ -231,6 +231,30 @@ small, .small, .text-muted {
     font-size: 0.9rem !important;
 }
 
+/* Sidebar Navigation Styling */
+nav.bg-dark ul li a {
+    font-size: 1.15rem; /* Increased font size */
+    padding: 0.6rem 0.5rem; /* Added padding for better clickability */
+    display: block;
+    transition: all 0.2s;
+    border-radius: 6px;
+}
+nav.bg-dark ul li a i {
+    width: 25px; /* Ensures icons are perfectly aligned */
+    text-align: center;
+    margin-right: 10px;
+    font-size: 1.1rem;
+}
+nav.bg-dark ul li a:hover {
+    color: #F97316 !important;
+    background-color: rgba(255, 255, 255, 0.05); /* Subtle highlight effect */
+    transform: translateX(4px); /* Nice indent animation */
+}
+nav.bg-dark h5 {
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     nav {

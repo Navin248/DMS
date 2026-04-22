@@ -16,7 +16,15 @@ $filter_approval = isset($_GET['approval']) ? $_GET['approval'] : 'all';
 // Build WHERE clause
 $where = "WHERE r.user_id=$worker_id";
 if ($filter_status !== 'all') {
-    $where .= " AND r.status='$filter_status'";
+    if ($filter_status === 'pending') {
+        $where .= " AND r.status = 'pending' AND a.id IS NULL";
+    } elseif ($filter_status === 'allocated') {
+        $where .= " AND (a.delivery_status = 'pending' OR (r.status = 'allocated' AND a.id IS NULL))";
+    } elseif ($filter_status === 'in_transit') {
+        $where .= " AND a.delivery_status = 'in_transit'";
+    } elseif ($filter_status === 'delivered') {
+        $where .= " AND (a.delivery_status = 'delivered' OR r.status = 'delivered')";
+    }
 }
 if ($filter_approval !== 'all') {
     $where .= " AND r.approval_status='$filter_approval'";
@@ -37,16 +45,29 @@ $query = "SELECT r.id, r.resource_type, r.quantity, r.priority, r.status, r.appr
 $requests = $conn->query($query);
 $total = $requests->num_rows;
 
-// Get statistics
-$stats = [];
-$stats['pending'] = $conn->query("SELECT COUNT(*) as count FROM requests WHERE user_id=$worker_id AND status='pending'")->fetch_assoc()['count'];
-$stats['allocated'] = $conn->query("SELECT COUNT(*) as count FROM requests WHERE user_id=$worker_id AND status='allocated'")->fetch_assoc()['count'];
-$stats['in_transit'] = $conn->query("SELECT COUNT(*) as count FROM requests WHERE user_id=$worker_id AND status='in_transit'")->fetch_assoc()['count'];
-$stats['delivered'] = $conn->query("SELECT COUNT(*) as count FROM requests WHERE user_id=$worker_id AND status='delivered'")->fetch_assoc()['count'];
+// Get accurate real-time statistics
+$stats_query = "SELECT 
+    SUM(CASE WHEN r.status = 'pending' AND a.id IS NULL THEN 1 ELSE 0 END) as pending,
+    SUM(CASE WHEN a.delivery_status = 'pending' OR (r.status = 'allocated' AND a.id IS NULL) THEN 1 ELSE 0 END) as allocated,
+    SUM(CASE WHEN a.delivery_status = 'in_transit' THEN 1 ELSE 0 END) as in_transit,
+    SUM(CASE WHEN a.delivery_status = 'delivered' OR r.status = 'delivered' THEN 1 ELSE 0 END) as delivered,
+    SUM(CASE WHEN r.approval_status = 'pending' THEN 1 ELSE 0 END) as pending_approval,
+    SUM(CASE WHEN r.approval_status = 'approved' THEN 1 ELSE 0 END) as approved,
+    SUM(CASE WHEN r.approval_status = 'rejected' THEN 1 ELSE 0 END) as rejected
+    FROM requests r
+    LEFT JOIN allocations a ON r.id = a.request_id
+    WHERE r.user_id=$worker_id";
 
-$stats['pending_approval'] = $conn->query("SELECT COUNT(*) as count FROM requests WHERE user_id=$worker_id AND approval_status='pending'")->fetch_assoc()['count'];
-$stats['approved'] = $conn->query("SELECT COUNT(*) as count FROM requests WHERE user_id=$worker_id AND approval_status='approved'")->fetch_assoc()['count'];
-$stats['rejected'] = $conn->query("SELECT COUNT(*) as count FROM requests WHERE user_id=$worker_id AND approval_status='rejected'")->fetch_assoc()['count'];
+$stats_result = $conn->query($stats_query)->fetch_assoc();
+
+$stats = [];
+$stats['pending'] = $stats_result['pending'] ?? 0;
+$stats['allocated'] = $stats_result['allocated'] ?? 0;
+$stats['in_transit'] = $stats_result['in_transit'] ?? 0;
+$stats['delivered'] = $stats_result['delivered'] ?? 0;
+$stats['pending_approval'] = $stats_result['pending_approval'] ?? 0;
+$stats['approved'] = $stats_result['approved'] ?? 0;
+$stats['rejected'] = $stats_result['rejected'] ?? 0;
 ?>
 
 <!DOCTYPE html>
