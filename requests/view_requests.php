@@ -58,12 +58,24 @@ if (isset($_GET['success'])) {
     $success = urldecode($_GET['success']);
 }
 
+// Build WHERE clause for status filtering
+$where = "WHERE 1=1";
+if (isset($_GET['status']) && $_GET['status'] !== 'all') {
+    $filter_status = $conn->real_escape_string($_GET['status']);
+    if (in_array($filter_status, ['pending', 'approved', 'rejected'])) {
+        $where .= " AND r.approval_status = '$filter_status'";
+    } else {
+        $where .= " AND r.status = '$filter_status'";
+    }
+}
+
 // Get all requests with related disaster and user info
 $query = "SELECT r.*, d.type as disaster_type, d.location as disaster_location, 
                  u.username as requester_name
           FROM requests r 
           LEFT JOIN disasters d ON r.disaster_id = d.id
           LEFT JOIN users u ON r.user_id = u.id
+          $where
           ORDER BY r.priority='Critical' DESC, r.priority='High' DESC, r.created_at DESC";
 $result = $conn->query($query);
 

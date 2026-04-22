@@ -127,43 +127,43 @@ $my_allocations = $conn->query("SELECT a.id, a.delivery_status, a.created_at, r.
 
                     <!-- My Statistics -->
                     <div class="row mb-4">
-                        <div class="col-md-2 mb-3" onclick="window.location.href='my_requests.php';\" style="cursor:pointer;">
-                            <div class="dashboard-card card-pending">
+                        <div class="col-md-2 mb-3" onclick="window.location.href='my_requests.php?filter=all&approval=pending';" style="cursor:pointer;">
+                            <div class="dashboard-card card-pending" title="View Pending Approvals">
                                 <i class="fas fa-hourglass-half"></i>
                                 <h3><?php echo $my_pending; ?></h3>
                                 <p>Pending</p>
                             </div>
                         </div>
-                        <div class="col-md-2 mb-3" onclick="window.location.href='my_requests.php';\" style="cursor:pointer;">
-                            <div class="dashboard-card card-approved">
+                        <div class="col-md-2 mb-3" onclick="window.location.href='my_requests.php?filter=all&approval=approved';" style="cursor:pointer;">
+                            <div class="dashboard-card card-approved" title="View Approved Requests">
                                 <i class="fas fa-check-circle"></i>
                                 <h3><?php echo $my_approved; ?></h3>
                                 <p>Approved</p>
                             </div>
                         </div>
-                        <div class="col-md-2 mb-3" onclick="window.location.href='my_requests.php';\" style="cursor:pointer;">
-                            <div class="dashboard-card card-allocated">
+                        <div class="col-md-2 mb-3" onclick="window.location.href='my_requests.php?filter=allocated&approval=all';" style="cursor:pointer;">
+                            <div class="dashboard-card card-allocated" title="View Allocated Requests">
                                 <i class="fas fa-cube"></i>
                                 <h3><?php echo $my_allocated; ?></h3>
                                 <p>Allocated</p>
                             </div>
                         </div>
-                        <div class="col-md-2 mb-3" onclick="window.location.href='my_requests.php';\" style="cursor:pointer;">
-                            <div class="dashboard-card card-delivered">
+                        <div class="col-md-2 mb-3" onclick="window.location.href='my_requests.php?filter=delivered&approval=all';" style="cursor:pointer;">
+                            <div class="dashboard-card card-delivered" title="View Delivered Requests">
                                 <i class="fas fa-truck"></i>
                                 <h3><?php echo $my_delivered; ?></h3>
                                 <p>Delivered</p>
                             </div>
                         </div>
-                        <div class="col-md-2 mb-3" onclick="window.location.href='my_requests.php';\" style="cursor:pointer;">
-                            <div class="dashboard-card card-rejected">
+                        <div class="col-md-2 mb-3" onclick="window.location.href='my_requests.php?filter=all&approval=rejected';" style="cursor:pointer;">
+                            <div class="dashboard-card card-rejected" title="View Rejected Requests">
                                 <i class="fas fa-times-circle"></i>
                                 <h3><?php echo $my_rejected; ?></h3>
                                 <p>Rejected</p>
                             </div>
                         </div>
-                        <div class="col-md-2 mb-3" onclick="window.location.href='my_requests.php';\" style="cursor:pointer;">
-                            <div class="dashboard-card">
+                        <div class="col-md-2 mb-3" onclick="window.location.href='my_requests.php?filter=all&approval=all';" style="cursor:pointer;">
+                            <div class="dashboard-card" title="View All Requests">
                                 <i class="fas fa-chart-bar" style="color: #1E3A8A;"></i>
                                 <h3><?php echo $total_requests; ?></h3>
                                 <p>Total</p>

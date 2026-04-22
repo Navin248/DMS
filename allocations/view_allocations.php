@@ -78,6 +78,13 @@ if (isset($_GET['success'])) {
     $success = urldecode($_GET['success']);
 }
 
+// Build WHERE clause for status filtering
+$where = "WHERE 1=1";
+if (isset($_GET['status']) && $_GET['status'] !== 'all') {
+    $filter_status = $conn->real_escape_string($_GET['status']);
+    $where .= " AND a.delivery_status = '$filter_status'";
+}
+
 // Get all allocations with related data
 $query = "SELECT a.*, 
                  r.resource_name, 
@@ -87,6 +94,7 @@ $query = "SELECT a.*,
           JOIN resources r ON a.resource_id = r.id
           JOIN requests req ON a.request_id = req.id
           LEFT JOIN disasters d ON req.disaster_id = d.id
+          $where
           ORDER BY a.date DESC";
 $result = $conn->query($query);
 
