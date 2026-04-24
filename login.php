@@ -26,10 +26,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if ($result->num_rows > 0) {
             $user = $result->fetch_assoc();
-            
+
             // Verify password using password_verify (bcrypt)
             $password_valid = false;
-            
+
             if (password_verify($password, $user['password'])) {
                 // Bcrypt password matched
                 $password_valid = true;
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $upgrade_stmt->bind_param("si", $new_hash, $user['id']);
                 $upgrade_stmt->execute();
             }
-            
+
             if ($password_valid) {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
@@ -136,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 40px;
-            max-width: 1200px;
+            max-width: 1000px; /* Reduced from 1200px */
             width: 100%;
             padding: 20px;
             position: relative;
@@ -199,7 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         .helpline-box {
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(5px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 15px;
             padding: 20px;
@@ -231,7 +231,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .login-container {
             background: white;
             border-radius: 20px;
-            padding: 50px;
+            padding: 40px; /* Reduced padding from 50px */
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
             animation: slideInRight 0.8s ease;
         }
@@ -601,7 +601,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             <?php if (isset($_GET['reset']) && $_GET['reset'] == 'success'): ?>
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="fas fa-check-circle"></i> <strong>Password Reset!</strong> Your password has been changed successfully. Please login with your new password.
+                    <i class="fas fa-check-circle"></i> <strong>Password Reset!</strong> Your password has been changed
+                    successfully. Please login with your new password.
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             <?php endif; ?>
@@ -648,7 +649,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </form>
 
             <div style="text-align: center; margin-top: 15px;">
-                <a href="forgot_password.php" style="color: #F97316; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: color 0.3s ease;">
+                <a href="forgot_password.php"
+                    style="color: #F97316; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: color 0.3s ease;">
                     <i class="fas fa-key"></i> Forgot Password?
                 </a>
             </div>
