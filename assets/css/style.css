@@ -233,7 +233,7 @@ small, .small, .text-muted {
 
 /* Sidebar Navigation Styling */
 nav.bg-dark ul li a {
-    font-size: 1.15rem; /* Increased font size */
+    font-size: 1.65rem; /* Increased font size */
     padding: 0.6rem 0.5rem; /* Added padding for better clickability */
     display: block;
     transition: all 0.2s;

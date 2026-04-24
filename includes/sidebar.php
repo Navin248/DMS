@@ -1,6 +1,16 @@
 <?php
 $current_user = isset($_SESSION['role']) ? $_SESSION['role'] : 'user';
 ?>
+<style>
+    /* Inline style added to bypass browser caching */
+    nav.bg-dark ul li a {
+        font-size: 1.25rem !important;
+        padding: 0.75rem 1rem !important;
+    }
+    nav.bg-dark ul li a i {
+        font-size: 1.25rem !important;
+    }
+</style>
 <nav class="col-md-3 bg-dark text-white p-4" style="min-height: 100vh;">
     <h5 class="mb-4"><i class="fas fa-bars"></i> Menu</h5>
     <ul class="list-unstyled">
