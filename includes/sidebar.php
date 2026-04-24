@@ -7,6 +7,7 @@ $current_user = isset($_SESSION['role']) ? $_SESSION['role'] : 'user';
         font-size: 1.25rem !important;
         padding: 0.75rem 1rem !important;
     }
+
     nav.bg-dark ul li a i {
         font-size: 1.25rem !important;
     }
@@ -25,7 +26,7 @@ $current_user = isset($_SESSION['role']) ? $_SESSION['role'] : 'user';
                 </a>
             <?php endif; ?>
         </li>
-        
+
         <?php if ($current_user === 'admin'): ?>
             <li class="mb-3">
                 <a href="/DMS/requests/view_requests.php" class="text-white text-decoration-none">
@@ -65,7 +66,7 @@ $current_user = isset($_SESSION['role']) ? $_SESSION['role'] : 'user';
                 </a>
             </li>
         <?php endif; ?>
-        
+
         <hr>
         <li class="mb-3">
             <a href="/DMS/profile.php" class="text-white text-decoration-none">

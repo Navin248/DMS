@@ -85,7 +85,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1E3A8A 0%, #0f2847 50%, #F97316 100%);
+            background: linear-gradient(rgba(15, 40, 71, 0.3), rgba(15, 40, 71, 0.3)), url('assets/images/login-bg.png') no-repeat center center fixed;
+            background-size: cover;
             min-height: 100vh;
             display: flex;
             justify-content: center;
