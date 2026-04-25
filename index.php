@@ -61,10 +61,10 @@ if ($conn) {
     <style>
         body { font-family: 'Segoe UI', sans-serif; background-color: #F3F4F6; color: #333; }
         .navbar-custom { background: linear-gradient(135deg, #1E3A8A 0%, #0f2847 100%); box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
-        .navbar-custom .navbar-brand { font-size: 24px; font-weight: bold; color: #F97316 !important; display: flex; align-items: center; gap: 10px; }
-        .navbar-custom .nav-link { color: white !important; transition: all 0.3s ease; font-size: 1.2rem; font-weight: 500; margin: 0 5px; }
+        .navbar-custom .navbar-brand { font-size: 32px; font-weight: bold; color: #F97316 !important; display: flex; align-items: center; gap: 10px; }
+        .navbar-custom .nav-link { color: white !important; transition: all 0.3s ease; font-size: 1.5rem !important; font-weight: 600; margin: 0 10px; }
         .navbar-custom .nav-link:hover { color: #F97316 !important; }
-        .btn-login { background-color: #F97316; color: white; border: none; transition: all 0.3s ease; font-size: 1.2rem; font-weight: 500; padding: 8px 24px; border-radius: 6px; }
+        .btn-login { background-color: #F97316; color: white; border: none; transition: all 0.3s ease; font-size: 1.4rem !important; font-weight: 600; padding: 10px 30px; border-radius: 8px; }
         .btn-login:hover { background-color: #e86a0a; transform: scale(1.05); color: white; }
         .hero { height: 70vh; background: linear-gradient(135deg, #1E3A8A 0%, #0f2847 100%); display: flex; align-items: center; justify-content: center; color: white; text-align: center; position: relative; overflow: hidden; }
         .hero::before { content: ''; position: absolute; width: 200%; height: 200%; background: radial-gradient(circle, rgba(249, 115, 22, 0.1) 0%, transparent 70%); animation: slowMove 20s ease-in-out infinite; }
