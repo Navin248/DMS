@@ -25,6 +25,7 @@ $delivered_allocations = $conn->query("SELECT a.*, r.resource_name, d.type as di
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,35 +39,45 @@ $delivered_allocations = $conn->query("SELECT a.*, r.resource_name, d.type as di
             border-radius: 12px;
             padding: 25px;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             transition: all 0.3s ease;
             border: 2px solid transparent;
             cursor: pointer;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
+
         .dashboard-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
             border-color: #1E3A8A;
         }
+
         .dashboard-card i {
             font-size: 2.5rem;
             margin-bottom: 15px;
         }
+
         .dashboard-card h3 {
             font-size: 2.5rem;
             font-weight: bold;
             color: #1E3A8A;
             margin: 10px 0;
         }
+
         .dashboard-card p {
             color: #666;
             font-size: 0.95rem;
             margin: 10px 0 0 0;
         }
+
         .timeline {
             position: relative;
             padding: 10px 0;
         }
+
         .timeline::before {
             content: '';
             position: absolute;
@@ -76,35 +87,40 @@ $delivered_allocations = $conn->query("SELECT a.*, r.resource_name, d.type as di
             width: 2px;
             background: #e9ecef;
         }
+
         .timeline .mb-3 {
             position: relative;
             margin-left: 50px;
         }
+
         .timeline .badge {
             position: absolute;
             left: -33px;
             top: 0;
         }
-    </style></head>
+    </style>
+</head>
+
 <body>
     <div class="container-fluid">
         <div class="row" style="min-height: 100vh;">
             <!-- Sidebar -->
             <?php include 'includes/sidebar.php'; ?>
-            
+
             <!-- Main Content -->
             <div class="col-md-9 p-4" style="background-color: #F3F4F6;">
                 <!-- Header -->
                 <?php include 'includes/header.php'; ?>
-                
+
                 <!-- Alert Messages -->
                 <?php if ($_GET['timeout'] ?? false): ?>
                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                        <i class="fas fa-clock"></i> <strong>Session Expired!</strong> Your session timed out after 30 minutes of inactivity.
+                        <i class="fas fa-clock"></i> <strong>Session Expired!</strong> Your session timed out after 30
+                        minutes of inactivity.
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 <?php endif; ?>
-                
+
                 <?php if ($error): ?>
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         <?php echo $error; ?>
@@ -115,7 +131,7 @@ $delivered_allocations = $conn->query("SELECT a.*, r.resource_name, d.type as di
                 <!-- Dashboard Stats -->
                 <div class="mt-4">
                     <h2 class="mb-4"><i class="fas fa-chart-line"></i> Dashboard Overview</h2>
-                    
+
                     <div class="row">
                         <!-- Active Disasters -->
                         <div class="col-md-3 mb-4">
@@ -146,7 +162,8 @@ $delivered_allocations = $conn->query("SELECT a.*, r.resource_name, d.type as di
 
                         <!-- Delivered Allocations -->
                         <div class="col-md-3 mb-4">
-                            <div class="dashboard-card" data-bs-toggle="modal" data-bs-target="#deliveredallocationsModal">
+                            <div class="dashboard-card" data-bs-toggle="modal"
+                                data-bs-target="#deliveredallocationsModal">
                                 <i class="fas fa-check-circle text-success"></i>
                                 <h3><?php echo $delivered_allocations_count; ?></h3>
                                 <p>Delivered</p>
@@ -242,22 +259,26 @@ $delivered_allocations = $conn->query("SELECT a.*, r.resource_name, d.type as di
                                         while ($activity = $activity_result->fetch_assoc()) {
                                             $icon = $activity['type'] == 'disaster' ? 'fa-exclamation-triangle' : ($activity['type'] == 'request' ? 'fa-list-check' : 'fa-dolly');
                                             $color = $activity['type'] == 'disaster' ? 'danger' : ($activity['type'] == 'request' ? 'warning' : 'success');
-                                    ?>
-                                        <div class="mb-3 pb-3 border-bottom">
-                                            <div class="d-flex">
-                                                <div class="me-3">
-                                                    <span class="badge bg-<?php echo $color; ?> rounded-circle p-2">
-                                                        <i class="fas <?php echo $icon; ?>"></i>
-                                                    </span>
-                                                </div>
-                                                <div>
-                                                    <h6 class="mb-1"><?php echo htmlspecialchars($activity['title']); ?></h6>
-                                                    <p class="mb-1 text-muted small"><?php echo htmlspecialchars($activity['detail']); ?></p>
-                                                    <small class="text-secondary"><?php echo date('M d, Y H:i', strtotime($activity['activity_time'])); ?></small>
+                                            ?>
+                                            <div class="mb-3 pb-3 border-bottom">
+                                                <div class="d-flex">
+                                                    <div class="me-3">
+                                                        <span class="badge bg-<?php echo $color; ?> rounded-circle p-2">
+                                                            <i class="fas <?php echo $icon; ?>"></i>
+                                                        </span>
+                                                    </div>
+                                                    <div>
+                                                        <h6 class="mb-1"><?php echo htmlspecialchars($activity['title']); ?>
+                                                        </h6>
+                                                        <p class="mb-1 text-muted small">
+                                                            <?php echo htmlspecialchars($activity['detail']); ?>
+                                                        </p>
+                                                        <small
+                                                            class="text-secondary"><?php echo date('M d, Y H:i', strtotime($activity['activity_time'])); ?></small>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    <?php
+                                            <?php
                                         }
                                     } else {
                                         echo '<p class="text-muted text-center">No activities yet</p>';
@@ -332,7 +353,8 @@ $delivered_allocations = $conn->query("SELECT a.*, r.resource_name, d.type as di
                             </table>
                         </div>
                     <?php else: ?>
-                        <p class="text-muted text-center"><i class="fas fa-smile-wink"></i> No active disasters at the moment!</p>
+                        <p class="text-muted text-center"><i class="fas fa-smile-wink"></i> No active disasters at the
+                            moment!</p>
                     <?php endif; ?>
                 </div>
             </div>
@@ -390,7 +412,7 @@ $delivered_allocations = $conn->query("SELECT a.*, r.resource_name, d.type as di
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <?php 
+                    <?php
                     $breakdown = $resource_breakdown->fetch_assoc();
                     $resources = $conn->query("SELECT * FROM resources ORDER BY quantity DESC");
                     ?>
@@ -429,7 +451,8 @@ $delivered_allocations = $conn->query("SELECT a.*, r.resource_name, d.type as di
                                         <tr>
                                             <td><?php echo htmlspecialchars($res['resource_name']); ?></td>
                                             <td>
-                                                <span class="badge bg-success"><?php echo number_format($res['quantity']); ?></span>
+                                                <span
+                                                    class="badge bg-success"><?php echo number_format($res['quantity']); ?></span>
                                             </td>
                                             <td><?php echo htmlspecialchars($res['warehouse_location'] ?? 'N/A'); ?></td>
                                         </tr>
@@ -452,10 +475,10 @@ $delivered_allocations = $conn->query("SELECT a.*, r.resource_name, d.type as di
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <?php 
+                    <?php
                     $delivered = $conn->query("SELECT a.*, r.resource_name, d.type as disaster_type FROM allocations a JOIN resources r ON a.resource_id = r.id JOIN requests req ON a.request_id = req.id JOIN disasters d ON req.disaster_id = d.id WHERE a.delivery_status = 'delivered' ORDER BY a.date DESC LIMIT 20");
-                    if ($delivered && $delivered->num_rows > 0): 
-                    ?>
+                    if ($delivered && $delivered->num_rows > 0):
+                        ?>
                         <div class="table-responsive">
                             <table class="table table-hover">
                                 <thead class="table-light">
@@ -472,7 +495,9 @@ $delivered_allocations = $conn->query("SELECT a.*, r.resource_name, d.type as di
                                         <tr>
                                             <td><strong><?php echo htmlspecialchars($alloc['disaster_type']); ?></strong></td>
                                             <td><?php echo htmlspecialchars($alloc['resource_name']); ?></td>
-                                            <td><span class="badge bg-success"><?php echo $alloc['quantity_allocated']; ?></span></td>
+                                            <td><span
+                                                    class="badge bg-success"><?php echo $alloc['quantity_allocated']; ?></span>
+                                            </td>
                                             <td><?php echo date('M d, Y', strtotime($alloc['date'])); ?></td>
                                             <td><span class="badge bg-success">Delivered</span></td>
                                         </tr>
@@ -490,13 +515,14 @@ $delivered_allocations = $conn->query("SELECT a.*, r.resource_name, d.type as di
 
     <!-- Footer -->
     <?php include 'includes/footer.php'; ?>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>    <script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
         // Export to CSV functionality (Phase 7)
         function exportToCSV(type) {
             let url = '';
-            
-            switch(type) {
+
+            switch (type) {
                 case 'disasters':
                     url = 'disasters/view_disasters.php?export=1';
                     break;
@@ -510,7 +536,7 @@ $delivered_allocations = $conn->query("SELECT a.*, r.resource_name, d.type as di
                     url = 'allocations/view_allocations.php?export=1';
                     break;
             }
-            
+
             if (url) {
                 window.open(url, '_blank');
                 showNotification('Exporting ' + type + '...', 'info');
@@ -529,13 +555,15 @@ $delivered_allocations = $conn->query("SELECT a.*, r.resource_name, d.type as di
                 ${message}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             `;
-            
+
             document.body.appendChild(alertDiv);
-            
+
             setTimeout(() => {
                 const bsAlert = new bootstrap.Alert(alertDiv);
                 bsAlert.close();
             }, 3000);
         }
-    </script></body>
+    </script>
+</body>
+
 </html>

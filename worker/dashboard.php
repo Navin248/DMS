@@ -67,6 +67,10 @@ $my_allocations = $conn->query("SELECT a.id, a.delivery_status, a.created_at, r.
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             transition: all 0.3s ease;
             border: 2px solid transparent;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         .dashboard-card:hover {
             transform: translateY(-3px);

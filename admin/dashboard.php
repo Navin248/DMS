@@ -56,6 +56,10 @@ $recent_allocations = $conn->query("SELECT a.id, a.delivery_status, r.resource_n
             transition: all 0.3s ease;
             border: 2px solid transparent;
             cursor: pointer;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         .dashboard-card:hover {
             transform: translateY(-5px);
