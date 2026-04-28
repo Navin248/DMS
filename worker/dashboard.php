@@ -51,6 +51,7 @@ $my_allocations = $conn->query("SELECT a.id, a.delivery_status, a.created_at, r.
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -64,7 +65,7 @@ $my_allocations = $conn->query("SELECT a.id, a.delivery_status, a.created_at, r.
             border-radius: 12px;
             padding: 20px;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             transition: all 0.3s ease;
             border: 2px solid transparent;
             height: 100%;
@@ -72,34 +73,68 @@ $my_allocations = $conn->query("SELECT a.id, a.delivery_status, a.created_at, r.
             flex-direction: column;
             justify-content: center;
         }
+
         .dashboard-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
         }
+
         .dashboard-card i {
             font-size: 2rem;
             margin-bottom: 10px;
         }
+
         .dashboard-card h3 {
             font-size: 2rem;
             font-weight: bold;
             margin: 10px 0 5px 0;
         }
+
         .dashboard-card p {
             color: #666;
             margin: 0;
             font-size: 0.9rem;
         }
-        .card-pending { border-top: 4px solid #ffc107; }
-        .card-pending i { color: #ffc107; }
-        .card-approved { border-top: 4px solid #28a745; }
-        .card-approved i { color: #28a745; }
-        .card-allocated { border-top: 4px solid #007bff; }
-        .card-allocated i { color: #007bff; }
-        .card-delivered { border-top: 4px solid #17a2b8; }
-        .card-delivered i { color: #17a2b8; }
-        .card-rejected { border-top: 4px solid #dc3545; }
-        .card-rejected i { color: #dc3545; }
+
+        .card-pending {
+            border-top: 4px solid #ffc107;
+        }
+
+        .card-pending i {
+            color: #ffc107;
+        }
+
+        .card-approved {
+            border-top: 4px solid #28a745;
+        }
+
+        .card-approved i {
+            color: #28a745;
+        }
+
+        .card-allocated {
+            border-top: 4px solid #007bff;
+        }
+
+        .card-allocated i {
+            color: #007bff;
+        }
+
+        .card-delivered {
+            border-top: 4px solid #17a2b8;
+        }
+
+        .card-delivered i {
+            color: #17a2b8;
+        }
+
+        .card-rejected {
+            border-top: 4px solid #dc3545;
+        }
+
+        .card-rejected i {
+            color: #dc3545;
+        }
 
         .status-badge {
             padding: 6px 12px;
@@ -109,64 +144,77 @@ $my_allocations = $conn->query("SELECT a.id, a.delivery_status, a.created_at, r.
         }
     </style>
 </head>
+
 <body>
     <div class="container-fluid">
         <div class="row" style="min-height: 100vh;">
             <?php include '../includes/sidebar.php'; ?>
-            
+
             <div class="col-md-9 p-4" style="background-color: #F3F4F6;">
                 <?php include '../includes/header.php'; ?>
-                
+
                 <div class="mt-4">
                     <!-- Page Title -->
                     <h2 class="mb-4"><i class="fas fa-user"></i> Worker Dashboard</h2>
 
                     <!-- Welcome Message -->
                     <div class="alert alert-info alert-dismissible fade show" role="alert">
-                        <i class="fas fa-info-circle"></i> 
-                        <strong>Welcome, <?php echo htmlspecialchars($user['username']); ?>!</strong> 
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Welcome, <?php echo htmlspecialchars($user['username']); ?>!</strong>
                         Track your requests and allocations here.
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
 
                     <!-- My Statistics -->
                     <div class="row mb-4">
-                        <div class="col-md-2 mb-3" onclick="window.location.href='my_requests.php?filter=all&approval=pending';" style="cursor:pointer;">
+                        <div class="col-md-2 mb-3"
+                            onclick="window.location.href='my_requests.php?filter=all&approval=pending';"
+                            style="cursor:pointer;">
                             <div class="dashboard-card card-pending" title="View Pending Approvals">
                                 <i class="fas fa-hourglass-half"></i>
                                 <h3><?php echo $my_pending; ?></h3>
                                 <p>Pending</p>
                             </div>
                         </div>
-                        <div class="col-md-2 mb-3" onclick="window.location.href='my_requests.php?filter=all&approval=approved';" style="cursor:pointer;">
+                        <div class="col-md-2 mb-3"
+                            onclick="window.location.href='my_requests.php?filter=all&approval=approved';"
+                            style="cursor:pointer;">
                             <div class="dashboard-card card-approved" title="View Approved Requests">
                                 <i class="fas fa-check-circle"></i>
                                 <h3><?php echo $my_approved; ?></h3>
                                 <p>Approved</p>
                             </div>
                         </div>
-                        <div class="col-md-2 mb-3" onclick="window.location.href='my_requests.php?filter=allocated&approval=all';" style="cursor:pointer;">
+                        <div class="col-md-2 mb-3"
+                            onclick="window.location.href='my_requests.php?filter=allocated&approval=all';"
+                            style="cursor:pointer;">
                             <div class="dashboard-card card-allocated" title="View Allocated Requests">
                                 <i class="fas fa-cube"></i>
                                 <h3><?php echo $my_allocated; ?></h3>
                                 <p>Allocated</p>
                             </div>
                         </div>
-                        <div class="col-md-2 mb-3" onclick="window.location.href='my_requests.php?filter=delivered&approval=all';" style="cursor:pointer;">
+                        <div class="col-md-2 mb-3"
+                            onclick="window.location.href='my_requests.php?filter=delivered&approval=all';"
+                            style="cursor:pointer;">
                             <div class="dashboard-card card-delivered" title="View Delivered Requests">
                                 <i class="fas fa-truck"></i>
                                 <h3><?php echo $my_delivered; ?></h3>
                                 <p>Delivered</p>
                             </div>
                         </div>
-                        <div class="col-md-2 mb-3" onclick="window.location.href='my_requests.php?filter=all&approval=rejected';" style="cursor:pointer;">
+                        <div class="col-md-2 mb-3"
+                            onclick="window.location.href='my_requests.php?filter=all&approval=rejected';"
+                            style="cursor:pointer;">
                             <div class="dashboard-card card-rejected" title="View Rejected Requests">
                                 <i class="fas fa-times-circle"></i>
                                 <h3><?php echo $my_rejected; ?></h3>
                                 <p>Rejected</p>
                             </div>
                         </div>
-                        <div class="col-md-2 mb-3" onclick="window.location.href='my_requests.php?filter=all&approval=all';" style="cursor:pointer;">
+                        <div class="col-md-2 mb-3"
+                            onclick="window.location.href='my_requests.php?filter=all&approval=all';"
+                            style="cursor:pointer;">
                             <div class="dashboard-card" title="View All Requests">
                                 <i class="fas fa-chart-bar" style="color: #1E3A8A;"></i>
                                 <h3><?php echo $total_requests; ?></h3>
@@ -197,23 +245,33 @@ $my_allocations = $conn->query("SELECT a.id, a.delivery_status, a.created_at, r.
                                                 <tbody>
                                                     <?php while ($req = $my_requests->fetch_assoc()): ?>
                                                         <tr>
-                                                            <td><?php echo htmlspecialchars(substr($req['resource_type'], 0, 12)); ?></td>
-                                                            <td><span class="badge bg-info"><?php echo $req['quantity']; ?></span></td>
+                                                            <td><?php echo htmlspecialchars(substr($req['resource_type'], 0, 12)); ?>
+                                                            </td>
+                                                            <td><span
+                                                                    class="badge bg-info"><?php echo $req['quantity']; ?></span>
+                                                            </td>
                                                             <td>
-                                                                <span class="status-badge" style="background: <?php echo ($req['approval_status']=='approved' ? '#28a745' : ($req['approval_status']=='pending' ? '#ffc107' : '#dc3545')); ?>; color: white;">
+                                                                <span class="status-badge"
+                                                                    style="background: <?php echo ($req['approval_status'] == 'approved' ? '#28a745' : ($req['approval_status'] == 'pending' ? '#ffc107' : '#dc3545')); ?>; color: white;">
                                                                     <?php echo substr(ucfirst($req['approval_status']), 0, 1); ?>
                                                                 </span>
                                                             </td>
                                                             <td>
-                                                                <?php 
-                                                                    $r_status = $req['real_status'];
-                                                                    if ($r_status == 'pending') $bg = '#ffc107';
-                                                                    elseif ($r_status == 'allocated') $bg = '#007bff';
-                                                                    elseif ($r_status == 'in_transit') $bg = '#17a2b8';
-                                                                    elseif ($r_status == 'delivered') $bg = '#28a745';
-                                                                    else $bg = '#6c757d';
+                                                                <?php
+                                                                $r_status = $req['real_status'];
+                                                                if ($r_status == 'pending')
+                                                                    $bg = '#ffc107';
+                                                                elseif ($r_status == 'allocated')
+                                                                    $bg = '#007bff';
+                                                                elseif ($r_status == 'in_transit')
+                                                                    $bg = '#17a2b8';
+                                                                elseif ($r_status == 'delivered')
+                                                                    $bg = '#28a745';
+                                                                else
+                                                                    $bg = '#6c757d';
                                                                 ?>
-                                                                <span class="status-badge" style="background: <?php echo $bg; ?>; color: white;">
+                                                                <span class="status-badge"
+                                                                    style="background: <?php echo $bg; ?>; color: white;">
                                                                     <?php echo substr(ucfirst(str_replace('_', ' ', $r_status)), 0, 1); ?>
                                                                 </span>
                                                             </td>
@@ -254,10 +312,14 @@ $my_allocations = $conn->query("SELECT a.id, a.delivery_status, a.created_at, r.
                                                 <tbody>
                                                     <?php while ($alloc = $my_allocations->fetch_assoc()): ?>
                                                         <tr>
-                                                            <td><?php echo htmlspecialchars(substr($alloc['resource_name'], 0, 12)); ?></td>
-                                                            <td><span class="badge bg-info"><?php echo $alloc['quantity_allocated']; ?></span></td>
+                                                            <td><?php echo htmlspecialchars(substr($alloc['resource_name'], 0, 12)); ?>
+                                                            </td>
+                                                            <td><span
+                                                                    class="badge bg-info"><?php echo $alloc['quantity_allocated']; ?></span>
+                                                            </td>
                                                             <td>
-                                                                <span class="status-badge" style="background: <?php echo ($alloc['delivery_status']=='delivered' ? '#28a745' : ($alloc['delivery_status']=='in_transit' ? '#17a2b8' : '#ffc107')); ?>; color: white;">
+                                                                <span class="status-badge"
+                                                                    style="background: <?php echo ($alloc['delivery_status'] == 'delivered' ? '#28a745' : ($alloc['delivery_status'] == 'in_transit' ? '#17a2b8' : '#ffc107')); ?>; color: white;">
                                                                     <?php echo substr(ucfirst($alloc['delivery_status']), 0, 1); ?>
                                                                 </span>
                                                             </td>
@@ -285,7 +347,7 @@ $my_allocations = $conn->query("SELECT a.id, a.delivery_status, a.created_at, r.
     </div>
 
     <?php include '../includes/footer.php'; ?>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Auto-dismiss alerts after 5 seconds
@@ -297,4 +359,5 @@ $my_allocations = $conn->query("SELECT a.id, a.delivery_status, a.created_at, r.
         });
     </script>
 </body>
+
 </html>

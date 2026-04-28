@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'config/database.php';
+require_once 'config/config.php';
 
 $error = '';
 $success = '';
@@ -8,11 +9,35 @@ $reset_link = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $login_input = isset($_POST['username']) ? trim($_POST['username']) : '';
+    $recaptcha_response = isset($_POST['g-recaptcha-response']) ? $_POST['g-recaptcha-response'] : '';
 
     if (empty($login_input)) {
         $error = 'Please enter your username or email!';
+    } elseif (empty($recaptcha_response)) {
+        $error = 'Please verify that you are not a robot.';
     } else {
-        // Check if user exists by email or username
+        // Verify reCAPTCHA response
+        $verify_url = 'https://www.google.com/recaptcha/api/siteverify';
+        $verify_data = [
+            'secret' => RECAPTCHA_SECRET_KEY,
+            'response' => $recaptcha_response
+        ];
+        
+        $options = [
+            'http' => [
+                'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+                'method'  => 'POST',
+                'content' => http_build_query($verify_data)
+            ]
+        ];
+        $context  = stream_context_create($options);
+        $verify_result = file_get_contents($verify_url, false, $context);
+        $verify_json = json_decode($verify_result);
+
+        if (!$verify_json->success) {
+            $error = 'reCAPTCHA verification failed. Please try again.';
+        } else {
+            // Check if user exists by email or username
         if (strpos($login_input, '@') !== false) {
             $query = "SELECT id, username, email FROM users WHERE email = ?";
         } else {
@@ -51,6 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         } else {
             $error = 'User not found! Please check your username or email and try again.';
+            }
         }
     }
 }
@@ -65,6 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Forgot Password - Disaster Relief System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
         * {
             margin: 0;
@@ -395,6 +422,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <input type="text" class="form-control" id="username" name="username"
                             placeholder="Enter your username or email" required autofocus>
                     </div>
+                </div>
+
+                <div class="form-group mb-3 text-center d-flex justify-content-center">
+                    <div class="g-recaptcha" data-sitekey="<?php echo RECAPTCHA_SITE_KEY; ?>"></div>
                 </div>
 
                 <button type="submit" class="btn-reset">
