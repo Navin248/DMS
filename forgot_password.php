@@ -13,29 +13,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (empty($login_input)) {
         $error = 'Please enter your username or email!';
-    } elseif (empty($recaptcha_response)) {
-        $error = 'Please verify that you are not a robot.';
+    } elseif (empty($_POST['mtcaptcha-verifiedtoken'])) {
+        $error = 'Please verify the captcha.';
     } else {
-        // Verify reCAPTCHA response
-        $verify_url = 'https://www.google.com/recaptcha/api/siteverify';
-        $verify_data = [
-            'secret' => RECAPTCHA_SECRET_KEY,
-            'response' => $recaptcha_response
-        ];
+        // Verify MTCaptcha response
+        $token = $_POST['mtcaptcha-verifiedtoken'];
+        $privateKey = MTCAPTCHA_PRIVATE_KEY;
+        $verify_url = "https://service.mtcaptcha.com/mtcv1/api/checktoken?privatekey=" . urlencode($privateKey) . "&token=" . urlencode($token);
         
-        $options = [
-            'http' => [
-                'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-                'method'  => 'POST',
-                'content' => http_build_query($verify_data)
-            ]
-        ];
-        $context  = stream_context_create($options);
-        $verify_result = file_get_contents($verify_url, false, $context);
+        $verify_result = file_get_contents($verify_url);
         $verify_json = json_decode($verify_result);
 
         if (!$verify_json->success) {
-            $error = 'reCAPTCHA verification failed. Please try again.';
+            $error = 'Captcha verification failed. Please try again.';
         } else {
             // Check if user exists by email or username
         if (strpos($login_input, '@') !== false) {
@@ -91,7 +81,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Forgot Password - Disaster Relief System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://service.mtcaptcha.com/mtcv1/client/mtcaptcha.min.js" async></script>
+    <script>
+        var mtcaptchaConfig = {
+            "sitekey": "<?php echo MTCAPTCHA_SITE_KEY; ?>"
+        };
+    </script>
     <style>
         * {
             margin: 0;
@@ -424,8 +419,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                 </div>
 
-                <div class="form-group mb-3 text-center d-flex justify-content-center">
-                    <div class="g-recaptcha" data-sitekey="<?php echo RECAPTCHA_SITE_KEY; ?>"></div>
+                <div class="form-group mb-3 text-center">
+                    <div class="mtcaptcha"></div>
+                    <div style="margin-top: 10px;">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="mtcaptcha.reload()">
+                            <i class="fas fa-sync-alt"></i> Refresh Captcha
+                        </button>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn-reset">
