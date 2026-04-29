@@ -84,7 +84,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <script src="https://service.mtcaptcha.com/mtcv1/client/mtcaptcha.min.js" async></script>
     <script>
         var mtcaptchaConfig = {
-            "sitekey": "<?php echo MTCAPTCHA_SITE_KEY; ?>"
+            "sitekey": "<?php echo MTCAPTCHA_SITE_KEY; ?>",
+            "widgetSize": "mini"
         };
     </script>
     <style>
