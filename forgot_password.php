@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <script>
         var mtcaptchaConfig = {
             "sitekey": "<?php echo MTCAPTCHA_SITE_KEY; ?>",
-            "widgetSize": "mini"
+            "widgetSize": "standard"
         };
     </script>
     <style>
@@ -421,9 +421,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
 
                 <div class="form-group mb-3 text-center">
-                    <div class="mtcaptcha"></div>
-                    <div style="margin-top: 10px;">
-                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="mtcaptcha.reload()">
+                    <div class="d-flex justify-content-center">
+                        <div class="mtcaptcha"></div>
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="mtcaptcha.reload()" 
+                                style="font-weight: 600; padding: 8px 20px; border-radius: 6px;">
                             <i class="fas fa-sync-alt"></i> Refresh Captcha
                         </button>
                     </div>
