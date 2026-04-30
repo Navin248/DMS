@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 }
-}
+
 ?>
 
 
@@ -144,7 +144,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 40px;
-            max-width: 1000px; /* Reduced from 1200px */
+            max-width: 1000px;
+            /* Reduced from 1200px */
             width: 100%;
             padding: 20px;
             position: relative;
@@ -239,7 +240,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .login-container {
             background: white;
             border-radius: 20px;
-            padding: 40px; /* Reduced padding from 50px */
+            padding: 40px;
+            /* Reduced padding from 50px */
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
             animation: slideInRight 0.8s ease;
         }
@@ -653,21 +655,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 <div class="form-group mb-3">
                     <label for="captcha_input" class="mb-2"><i class="fas fa-shield-alt"></i> Captcha</label>
-                    <div style="background: #000; padding: 10px; border-radius: 8px; margin-bottom: 10px; text-align: center;">
-                        <img src="captcha.php" id="captchaImage" alt="Captcha" style="max-width: 100%; border-radius: 4px;">
+                    <div
+                        style="background: #000; padding: 10px; border-radius: 8px; margin-bottom: 10px; text-align: center;">
+                        <img src="captcha.php" id="captchaImage" alt="Captcha"
+                            style="max-width: 100%; border-radius: 4px;">
                     </div>
-                    
+
                     <div style="margin-bottom: 15px;">
-                        <button type="button" class="btn btn-sm btn-secondary" onclick="refreshCaptcha()" 
-                                style="font-weight: 500; padding: 5px 15px; border-radius: 4px; background-color: #6c757d; border: none;">
+                        <button type="button" class="btn btn-sm btn-secondary" onclick="refreshCaptcha()"
+                            style="font-weight: 500; padding: 5px 15px; border-radius: 4px; background-color: #6c757d; border: none;">
                             Refresh Captcha
                         </button>
                     </div>
 
-                    <div class="input-wrapper" style="background-color: #212529; border: 1px solid #343a40; border-radius: 8px; overflow: hidden;">
-                        <input type="text" class="form-control" id="captcha_input" name="captcha_input" 
-                               placeholder="Enter Captcha" required 
-                               style="background: transparent; color: white; border: none; padding: 12px 15px;">
+                    <div class="input-wrapper"
+                        style="background-color: #212529; border: 1px solid #343a40; border-radius: 8px; overflow: hidden;">
+                        <input type="text" class="form-control" id="captcha_input" name="captcha_input"
+                            placeholder="Enter Captcha" required
+                            style="background: transparent; color: white; border: none; padding: 12px 15px;">
                     </div>
                 </div>
 

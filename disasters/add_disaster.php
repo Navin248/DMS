@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $query = "INSERT INTO disasters (type, location, latitude, longitude, severity, affected_population, status, date) 
                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("ssddisss", $type, $location, $latitude, $longitude, $severity, $affected_population, $status, $date);
+        $stmt->bind_param("ssddsiss", $type, $location, $latitude, $longitude, $severity, $affected_population, $status, $date);
         
         if ($stmt->execute()) {
             $disaster_id = $conn->insert_id;

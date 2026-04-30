@@ -57,7 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         } else {
             $error = 'User not found! Please check your username or email and try again.';
-            }
         }
     }
 }
@@ -117,23 +116,51 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(20px); }
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(20px);
+            }
         }
 
         @keyframes slideInUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
         }
 
         @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .forgot-container {
@@ -359,8 +386,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         /* Responsive */
         @media (max-width: 768px) {
-            body { padding: 20px; }
-            .forgot-container { padding: 30px 20px; }
+            body {
+                padding: 20px;
+            }
+
+            .forgot-container {
+                padding: 30px 20px;
+            }
         }
     </style>
 </head>
@@ -407,21 +439,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 <div class="form-group mb-3">
                     <label for="captcha_input" class="mb-2"><i class="fas fa-shield-alt"></i> Captcha</label>
-                    <div style="background: #000; padding: 10px; border-radius: 8px; margin-bottom: 10px; text-align: center;">
+                    <div
+                        style="background: #000; padding: 10px; border-radius: 8px; margin-bottom: 10px; text-align: center;">
                         <img src="captcha.php" id="captchaImage" alt="Captcha" style="max-width: 100%; border-radius: 4px;">
                     </div>
-                    
+
                     <div style="margin-bottom: 15px;">
-                        <button type="button" class="btn btn-sm btn-secondary" onclick="refreshCaptcha()" 
-                                style="font-weight: 500; padding: 5px 15px; border-radius: 4px; background-color: #6c757d; border: none;">
+                        <button type="button" class="btn btn-sm btn-secondary" onclick="refreshCaptcha()"
+                            style="font-weight: 500; padding: 5px 15px; border-radius: 4px; background-color: #6c757d; border: none;">
                             Refresh Captcha
                         </button>
                     </div>
 
-                    <div class="input-wrapper" style="background-color: #212529; border: 1px solid #343a40; border-radius: 8px; overflow: hidden;">
-                        <input type="text" class="form-control" id="captcha_input" name="captcha_input" 
-                               placeholder="Enter Captcha" required 
-                               style="background: transparent; color: white; border: none; padding: 12px 15px;">
+                    <div class="input-wrapper"
+                        style="background-color: #212529; border: 1px solid #343a40; border-radius: 8px; overflow: hidden;">
+                        <input type="text" class="form-control" id="captcha_input" name="captcha_input"
+                            placeholder="Enter Captcha" required
+                            style="background: transparent; color: white; border: none; padding: 12px 15px;">
                     </div>
                 </div>
 
@@ -447,7 +481,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
 
             <div style="text-align: center; margin-top: 20px;">
-                <a href="<?php echo htmlspecialchars($reset_link); ?>" class="btn-reset" style="text-decoration: none; display: inline-flex; width: auto; padding: 12px 30px;">
+                <a href="<?php echo htmlspecialchars($reset_link); ?>" class="btn-reset"
+                    style="text-decoration: none; display: inline-flex; width: auto; padding: 12px 30px;">
                     <i class="fas fa-arrow-right"></i> Reset My Password Now
                 </a>
             </div>
