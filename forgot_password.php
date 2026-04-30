@@ -400,9 +400,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <div class="forgot-container">
         <div class="forgot-header">
-            <div class="logo"><i class="fas fa-key"></i></div>
-            <h2>Forgot Password?</h2>
-            <p>Don't worry! Enter your username or email below and we'll generate a password reset link for you.</p>
+            <div class="logo" style="width: 60px; height: 60px; font-size: 1.8rem; margin-bottom: 10px;"><i class="fas fa-key"></i></div>
+            <h2 style="font-size: 1.5rem; margin-bottom: 5px;">Forgot Password?</h2>
+            <p style="font-size: 0.85rem; margin-bottom: 15px;">Enter your username or email below to generate a reset link.</p>
         </div>
 
         <?php if ($error): ?>
@@ -437,24 +437,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                 </div>
 
-                <div class="form-group mb-3">
-                    <label for="captcha_input" class="mb-2"><i class="fas fa-shield-alt"></i> Security Verification</label>
-                    <div style="background: #000; padding: 8px; border-radius: 8px; margin-bottom: 8px; text-align: center; border: 1px solid #343a40;">
-                        <img src="captcha.php" id="captchaImage" alt="Captcha" style="max-width: 100%; height: auto; border-radius: 4px;">
-                    </div>
-
-                    <div style="margin-bottom: 15px;">
+                <div class="form-group mb-2">
+                    <label class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-shield-alt"></i> Security Verification</label>
+                    <div style="display: flex; gap: 8px; align-items: stretch; margin-bottom: 8px;">
+                        <div style="background: #000; padding: 5px; border-radius: 8px; flex: 1; display: flex; align-items: center; justify-content: center; border: 1px solid #343a40; min-height: 45px;">
+                            <img src="captcha.php" id="captchaImage" alt="Captcha" style="max-height: 35px; width: auto; border-radius: 4px;">
+                        </div>
                         <button type="button" class="btn btn-sm btn-secondary" onclick="refreshCaptcha()"
-                            style="font-weight: 500; padding: 5px 15px; border-radius: 4px; background-color: #6c757d; border: none;">
-                            Refresh Captcha
+                                style="width: 40px; display: flex; align-items: center; justify-content: center; border-radius: 8px; background-color: #6c757d; border: none;">
+                            <i class="fas fa-sync-alt" style="font-size: 0.9rem;"></i>
                         </button>
                     </div>
-
-                    <div class="input-wrapper"
-                        style="background-color: #212529; border: 1px solid #343a40; border-radius: 8px; overflow: hidden;">
+                    <div class="input-wrapper" style="background-color: #212529; border: 1px solid #343a40; border-radius: 8px; overflow: hidden;">
                         <input type="text" class="form-control" id="captcha_input" name="captcha_input"
-                            placeholder="Enter Captcha" required
-                            style="background: transparent; color: white; border: none; padding: 12px 15px;">
+                               placeholder="Enter Captcha" required
+                               style="background: transparent; color: white; border: none; padding: 10px 15px; font-size: 0.9rem;">
                     </div>
                 </div>
 
