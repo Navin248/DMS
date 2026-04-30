@@ -13,21 +13,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (empty($login_input)) {
         $error = 'Please enter your username or email!';
-    } elseif (empty($_POST['mtcaptcha-verifiedtoken'])) {
-        $error = 'Please verify the captcha.';
+    } elseif (empty($_POST['captcha_input'])) {
+        $error = 'Please enter the captcha text.';
+    } elseif ($_POST['captcha_input'] !== $_SESSION['captcha_text']) {
+        $error = 'Incorrect captcha! Please try again.';
     } else {
-        // Verify MTCaptcha response
-        $token = $_POST['mtcaptcha-verifiedtoken'];
-        $privateKey = MTCAPTCHA_PRIVATE_KEY;
-        $verify_url = "https://service.mtcaptcha.com/mtcv1/api/checktoken?privatekey=" . urlencode($privateKey) . "&token=" . urlencode($token);
-        
-        $verify_result = file_get_contents($verify_url);
-        $verify_json = json_decode($verify_result);
-
-        if (!$verify_json->success) {
-            $error = 'Captcha verification failed. Please try again.';
-        } else {
-            // Check if user exists by email or username
+        // Check if user exists by email or username
         if (strpos($login_input, '@') !== false) {
             $query = "SELECT id, username, email FROM users WHERE email = ?";
         } else {
@@ -81,13 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Forgot Password - Disaster Relief System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <script src="https://service.mtcaptcha.com/mtcv1/client/mtcaptcha.min.js" async></script>
-    <script>
-        var mtcaptchaConfig = {
-            "sitekey": "<?php echo MTCAPTCHA_SITE_KEY; ?>",
-            "widgetSize": "standard"
-        };
-    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -420,15 +405,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                 </div>
 
-                <div class="form-group mb-3 text-center">
-                    <div class="d-flex justify-content-center">
-                        <div class="mtcaptcha"></div>
+                <div class="form-group mb-3">
+                    <label for="captcha_input" class="mb-2"><i class="fas fa-shield-alt"></i> Captcha</label>
+                    <div style="background: #000; padding: 10px; border-radius: 8px; margin-bottom: 10px; text-align: center;">
+                        <img src="captcha.php" id="captchaImage" alt="Captcha" style="max-width: 100%; border-radius: 4px;">
                     </div>
-                    <div style="margin-top: 15px;">
-                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="mtcaptcha.reload()" 
-                                style="font-weight: 600; padding: 8px 20px; border-radius: 6px;">
-                            <i class="fas fa-sync-alt"></i> Refresh Captcha
+                    
+                    <div style="margin-bottom: 15px;">
+                        <button type="button" class="btn btn-sm btn-secondary" onclick="refreshCaptcha()" 
+                                style="font-weight: 500; padding: 5px 15px; border-radius: 4px; background-color: #6c757d; border: none;">
+                            Refresh Captcha
                         </button>
+                    </div>
+
+                    <div class="input-wrapper" style="background-color: #212529; border: 1px solid #343a40; border-radius: 8px; overflow: hidden;">
+                        <input type="text" class="form-control" id="captcha_input" name="captcha_input" 
+                               placeholder="Enter Captcha" required 
+                               style="background: transparent; color: white; border: none; padding: 12px 15px;">
                     </div>
                 </div>
 
@@ -494,6 +487,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 this.parentElement.style.transform = 'scale(1)';
             });
         });
+
+        function refreshCaptcha() {
+            document.getElementById('captchaImage').src = 'captcha.php?' + new Date().getTime();
+            document.getElementById('captcha_input').value = '';
+        }
     </script>
 </body>
 
