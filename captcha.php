@@ -14,47 +14,47 @@ for ($i = 0; $i < 6; $i++) {
 // Store in session
 $_SESSION['captcha_text'] = $captcha_string;
 
-// Create image
-$width = 220;
-$height = 70;
+// Create image - Smaller box size
+$width = 160;
+$height = 45;
 $image = imagecreatetruecolor($width, $height);
 
 // Colors
 $bg_color = imagecolorallocate($image, 0, 0, 0); // Black background
 $text_color = imagecolorallocate($image, 255, 255, 255); // White text
-$noise_color = imagecolorallocate($image, 60, 60, 60); // Dark grey noise
+$noise_color = imagecolorallocate($image, 50, 50, 50); // Darker noise
 
 // Fill background
 imagefill($image, 0, 0, $bg_color);
 
 // Add some noise
-for ($i = 0; $i < 6; $i++) {
+for ($i = 0; $i < 3; $i++) {
     imageline($image, 0, rand(0, $height), $width, rand(0, $height), $noise_color);
 }
-for ($i = 0; $i < 150; $i++) {
-    imagesetpixel($image, rand(0, $width), rand(0, $height), $noise_color);
-}
 
-// Add text using TrueType Font for much larger size
+// Add text using TrueType Font
 $font_file = 'C:\Windows\Fonts\arial.ttf';
-$font_size = 28; // Large font size
+$font_size = 18; // Adjusted font size to fit smaller box
 
 if (file_exists($font_file)) {
-    // Center the text
+    // Calculate bounding box to center text
     $bbox = imagettfbbox($font_size, 0, $font_file, $captcha_string);
-    $x = ($width - ($bbox[2] - $bbox[0])) / 2;
-    $y = ($height - ($bbox[5] - $bbox[1])) / 2;
+    $text_width = $bbox[2] - $bbox[0];
+    $text_height = $bbox[1] - $bbox[7];
     
-    // Draw text with slight random rotation for each letter for security
+    $x = ($width - $text_width) / 2;
+    $y = ($height + $text_height) / 2 - 2; // Baseline adjustment
+    
+    // Draw text
     $current_x = $x;
     for ($i = 0; $i < strlen($captcha_string); $i++) {
         $char = $captcha_string[$i];
-        $angle = rand(-10, 10);
+        $angle = rand(-5, 5);
         imagettftext($image, $font_size, $angle, $current_x, $y, $text_color, $font_file, $char);
-        $current_x += 30; // Spacing
+        $current_x += 22; // Tight spacing
     }
 } else {
-    // Fallback to built-in font if TTF fails
+    // Fallback to built-in font
     $font = 5;
     $text_width = imagefontwidth($font) * strlen($captcha_string);
     $text_height = imagefontheight($font);
@@ -68,6 +68,7 @@ header('Content-Type: image/png');
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 header('Pragma: no-cache');
 
+ob_clean();
 imagepng($image);
 imagedestroy($image);
 ?>

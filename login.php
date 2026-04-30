@@ -655,7 +655,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 <div class="form-group mb-3">
                     <label for="captcha_input" class="mb-2"><i class="fas fa-shield-alt"></i> Security Verification</label>
-                    <div style="background: #000; padding: 15px; border-radius: 10px; margin-bottom: 12px; text-align: center; border: 1px solid #343a40;">
+                    <div style="background: #000; padding: 8px; border-radius: 8px; margin-bottom: 8px; text-align: center; border: 1px solid #343a40;">
                         <img src="captcha.php" id="captchaImage" alt="Captcha" style="max-width: 100%; height: auto; border-radius: 4px;">
                     </div>
 
